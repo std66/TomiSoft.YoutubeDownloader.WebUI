@@ -1,4 +1,6 @@
 # TomiSoft.YoutubeDownloader.WebUI
+[![Build status](https://ci.appveyor.com/api/projects/status/uxm5u7fr5752mr92?svg=true)](https://ci.appveyor.com/project/std66/tomisoft-youtubedownloader-webui)
+
 A simple WebUI for youtube-dl.
 
 Requirements

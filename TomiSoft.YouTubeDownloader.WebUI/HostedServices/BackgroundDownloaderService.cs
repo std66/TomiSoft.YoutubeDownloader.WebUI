@@ -49,7 +49,8 @@ namespace TomiSoft.YouTubeDownloader.WebUI.HostedServices {
         }
 
         private void DownloadStatusChanged(object sender, Guid DownloadID) {
-            if (sender is QueuedDownload download) {
+            DownloadState[] completedStatuses = new DownloadState[] { DownloadState.Completed, DownloadState.Failed };
+            if (sender is QueuedDownload download && completedStatuses.Contains(download.DownloadProgress.Status)) {
                 RunningDownloads.Remove(download);
                 CompletedDownloads.Add(download);
 

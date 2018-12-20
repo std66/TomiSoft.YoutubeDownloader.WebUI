@@ -29,8 +29,14 @@ namespace TomiSoft.YouTubeDownloader.WebUI.Controllers {
             return new JsonResult(this.youtubeDl.GetMediaInformation(MediaUri));
         }
 
-        public IActionResult EnqueueDownload([FromQuery] string MediaUri) {
-            Guid downloadId = downloaderService.EnqueueDownload(MediaUri, Tomisoft.YoutubeDownloader.Media.MediaFormat.MP3Audio);
+        public IActionResult EnqueueDownload([FromQuery] string MediaUri, [FromQuery] string MediaFormat) {
+            Tomisoft.YoutubeDownloader.Media.MediaFormat TargetFormat = Tomisoft.YoutubeDownloader.Media.MediaFormat.Video;
+
+            if (MediaFormat == "mp3audio") {
+                TargetFormat = Tomisoft.YoutubeDownloader.Media.MediaFormat.MP3Audio;
+            }
+
+            Guid downloadId = downloaderService.EnqueueDownload(MediaUri, TargetFormat);
 
             return new JsonResult(new {
                 DownloadId = downloadId

@@ -11,24 +11,20 @@ $(document).ready(function () {
 function initDownload() {
     var mediaUri = $("#mediaUri").val();
     var targetFormat = $("[name=targetFormat]:checked").val();
-
-    if (targetFormat === 'video') {
-        showMessage("Downloading video is not supported yet.");
-        return;
-    }
-
+    
     getMediaInformation(mediaUri).done(function () {
-        enqueueDownload(mediaUri).done(function () {
+        enqueueDownload(mediaUri, targetFormat).done(function () {
             downloadProgressInterval = setInterval(checkDownloadProgress, 1000);
         });
     });
 }
 
-function enqueueDownload(mediaUri) {
+function enqueueDownload(mediaUri, mediaFormat) {
     return $.getJSON(
         'downloader/enqueueDownload',
         {
-            MediaUri: mediaUri
+            MediaUri: mediaUri,
+            MediaFormat: mediaFormat
         },
         function (result) {
             downloadId = result.downloadId
@@ -122,10 +118,12 @@ function checkDownloadProgress() {
                 setProgress(100);
             }
             else if (result.downloadStatus == "Failed") {
+                clearInterval(downloadProgressInterval);
                 showMessage("Sorry, we couldn't download it :(");
             }
         }
     ).fail(function (jqXHR) {
+        clearInterval(downloadProgressInterval);
         showPage("startPage");
 
         if (jqXHR.status == 500) {

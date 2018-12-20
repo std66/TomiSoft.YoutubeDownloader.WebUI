@@ -32,8 +32,6 @@ namespace TomiSoft.YouTubeDownloader.WebUI {
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
-
-            services.AddLogging();
             
             services.AddSingleton<IYoutubeDlConfiguration>(YoutubeConfiguration);
             services.AddSingleton<IDownloaderServiceConfiguration>(YoutubeConfiguration);

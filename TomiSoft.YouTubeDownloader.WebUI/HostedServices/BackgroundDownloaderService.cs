@@ -48,9 +48,8 @@ namespace TomiSoft.YouTubeDownloader.WebUI.HostedServices {
             return result.DownloadProgress;
         }
 
-        private void DownloadStatusChanged(object sender, Guid DownloadID) {
-            DownloadState[] completedStatuses = new DownloadState[] { DownloadState.Completed, DownloadState.Failed };
-            if (sender is QueuedDownload download && completedStatuses.Contains(download.DownloadProgress.Status)) {
+        private void DownloadCompleted(object sender, Guid DownloadID) {
+            if (sender is QueuedDownload download) {
                 RunningDownloads.Remove(download);
                 CompletedDownloads.Add(download);
 
@@ -71,7 +70,7 @@ namespace TomiSoft.YouTubeDownloader.WebUI.HostedServices {
             if (!QueuedDownloads.IsEmpty && RunningDownloads.Count < ServiceConfiguration.MaximumParallelDownloads) {
                 if (QueuedDownloads.TryDequeue(out QueuedDownload download)) {
                     RunningDownloads.Add(download);
-                    download.DownloadCompleted += this.DownloadStatusChanged;
+                    download.DownloadCompleted += this.DownloadCompleted;
                     download.DownloadProgress.Start();
 
                     this.logger.LogInformation($"Download started with GUID: {download.DownloadID}");

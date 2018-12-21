@@ -4,7 +4,9 @@ using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Tomisoft.YoutubeDownloader;
 using Tomisoft.YoutubeDownloader.Downloading;
+using Tomisoft.YoutubeDownloader.Media;
 using TomiSoft.YouTubeDownloader.WebUI.Core;
+using TomiSoft.YouTubeDownloader.WebUI.Data;
 using TomiSoft.YouTubeDownloader.WebUI.HostedServices;
 using TomiSoft.YouTubeDownloader.WebUI.Models;
 
@@ -13,10 +15,12 @@ namespace TomiSoft.YouTubeDownloader.WebUI.Controllers {
     {
         private readonly IMediaDownloader youtubeDl;
         private readonly IDownloaderService downloaderService;
+        private readonly IFilenameDatabase filenameDatabase;
 
-        public DownloaderController(IMediaDownloader youtubeDl, IDownloaderService downloaderService) {
+        public DownloaderController(IMediaDownloader youtubeDl, IDownloaderService downloaderService, IFilenameDatabase filenameDatabase) {
             this.youtubeDl = youtubeDl;
             this.downloaderService = downloaderService;
+            this.filenameDatabase = filenameDatabase;
         }
 
         public IActionResult GetMediaInformation([FromQuery] string MediaUri) {
@@ -25,18 +29,25 @@ namespace TomiSoft.YouTubeDownloader.WebUI.Controllers {
 
             if (!Uri.IsWellFormedUriString(MediaUri, UriKind.Absolute))
                 return new ErrorResponse(ErrorCodes.MalformedMediaUri, HttpStatusCode.BadRequest).AsJsonResult();
-            
-            return new JsonResult(this.youtubeDl.GetMediaInformation(new Uri(MediaUri)));
+
+            Uri mediaUri = new Uri(MediaUri);
+
+            IMediaInformation info = this.youtubeDl.GetMediaInformation(mediaUri);
+            this.filenameDatabase.AddFilename(mediaUri, FilenameHelper.RemoveNotAllowedChars(info.Title));
+
+            return new JsonResult(info);
         }
 
         public IActionResult EnqueueDownload([FromQuery] string MediaUri, [FromQuery] string MediaFormat) {
-            Tomisoft.YoutubeDownloader.Media.MediaFormat TargetFormat = Tomisoft.YoutubeDownloader.Media.MediaFormat.Video;
+            MediaFormat TargetFormat = Tomisoft.YoutubeDownloader.Media.MediaFormat.Video;
 
             if (MediaFormat == "mp3audio") {
                 TargetFormat = Tomisoft.YoutubeDownloader.Media.MediaFormat.MP3Audio;
             }
-            
-            Guid downloadId = downloaderService.EnqueueDownload(new Uri(MediaUri), TargetFormat);
+
+            Uri mediaUri = new Uri(MediaUri);
+            Guid downloadId = downloaderService.EnqueueDownload(mediaUri, TargetFormat);
+            this.filenameDatabase.AssignDownloadId(mediaUri, downloadId);
 
             return new JsonResult(new {
                 DownloadId = downloadId
@@ -73,7 +84,15 @@ namespace TomiSoft.YouTubeDownloader.WebUI.Controllers {
 
                     Stream s = System.IO.File.OpenRead(progress.Filename);
                     var contentType = "application/octet-stream";
-                    var fileName = Path.GetFileName(progress.Filename);
+
+                    string fileName = this.filenameDatabase.GetFilename(downloadGuid);
+                    if (fileName != null) {
+                        fileName += Path.GetExtension(progress.Filename);
+                    }
+                    else {
+                        fileName = progress.Filename;
+                    }
+
                     return File(s, contentType, fileName);
                 }
                 catch (InvalidOperationException) {

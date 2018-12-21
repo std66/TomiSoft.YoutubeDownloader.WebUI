@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Tomisoft.YoutubeDownloader;
 using TomiSoft.YouTubeDownloader.WebUI.Core;
+using TomiSoft.YouTubeDownloader.WebUI.Data;
 using TomiSoft.YouTubeDownloader.WebUI.HostedServices;
 
 namespace TomiSoft.YouTubeDownloader.WebUI {
@@ -35,6 +36,7 @@ namespace TomiSoft.YouTubeDownloader.WebUI {
             
             services.AddSingleton<IYoutubeDlConfiguration>(YoutubeConfiguration);
             services.AddSingleton<IDownloaderServiceConfiguration>(YoutubeConfiguration);
+            services.AddSingleton<IFilenameDatabase, MemoryFilenameDB>();
             services.AddSingleton<IProcessFactory, ProcessFactory>();
             services.AddSingleton<IMediaDownloader, YoutubeDl>();
             

@@ -36,7 +36,7 @@ namespace TomiSoft.YouTubeDownloader.WebUI {
             services.AddSingleton<IYoutubeDlConfiguration>(YoutubeConfiguration);
             services.AddSingleton<IDownloaderServiceConfiguration>(YoutubeConfiguration);
             services.AddSingleton<IProcessFactory, ProcessFactory>();
-            services.AddSingleton<YoutubeDl>();
+            services.AddSingleton<IMediaDownloader, YoutubeDl>();
             
             services.AddSingleton<IDownloaderService, BackgroundDownloaderService>();
             services.AddHostedService<BackgroundDownloaderHostedServiceAdapter>();

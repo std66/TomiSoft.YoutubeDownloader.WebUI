@@ -11,10 +11,10 @@ using TomiSoft.YouTubeDownloader.WebUI.Models;
 namespace TomiSoft.YouTubeDownloader.WebUI.Controllers {
     public class DownloaderController : Controller
     {
-        private readonly YoutubeDl youtubeDl;
+        private readonly IMediaDownloader youtubeDl;
         private readonly IDownloaderService downloaderService;
 
-        public DownloaderController(YoutubeDl youtubeDl, IDownloaderService downloaderService) {
+        public DownloaderController(IMediaDownloader youtubeDl, IDownloaderService downloaderService) {
             this.youtubeDl = youtubeDl;
             this.downloaderService = downloaderService;
         }
@@ -26,7 +26,7 @@ namespace TomiSoft.YouTubeDownloader.WebUI.Controllers {
             if (!Uri.IsWellFormedUriString(MediaUri, UriKind.Absolute))
                 return new ErrorResponse(ErrorCodes.MalformedMediaUri, HttpStatusCode.BadRequest).AsJsonResult();
             
-            return new JsonResult(this.youtubeDl.GetMediaInformation(MediaUri));
+            return new JsonResult(this.youtubeDl.GetMediaInformation(new Uri(MediaUri)));
         }
 
         public IActionResult EnqueueDownload([FromQuery] string MediaUri, [FromQuery] string MediaFormat) {
@@ -35,8 +35,8 @@ namespace TomiSoft.YouTubeDownloader.WebUI.Controllers {
             if (MediaFormat == "mp3audio") {
                 TargetFormat = Tomisoft.YoutubeDownloader.Media.MediaFormat.MP3Audio;
             }
-
-            Guid downloadId = downloaderService.EnqueueDownload(MediaUri, TargetFormat);
+            
+            Guid downloadId = downloaderService.EnqueueDownload(new Uri(MediaUri), TargetFormat);
 
             return new JsonResult(new {
                 DownloadId = downloadId

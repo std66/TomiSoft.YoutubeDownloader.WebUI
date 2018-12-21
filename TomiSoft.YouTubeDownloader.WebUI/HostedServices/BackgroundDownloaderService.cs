@@ -14,7 +14,7 @@ using TomiSoft.YouTubeDownloader.WebUI.Core;
 
 namespace TomiSoft.YouTubeDownloader.WebUI.HostedServices {
     public class BackgroundDownloaderService : BackgroundService, IDownloaderService {
-        private readonly YoutubeDl YoutubeDl;
+        private readonly IMediaDownloader YoutubeDl;
         private readonly IDownloaderServiceConfiguration ServiceConfiguration;
         private readonly ILogger logger;
 
@@ -22,13 +22,13 @@ namespace TomiSoft.YouTubeDownloader.WebUI.HostedServices {
         private readonly List<QueuedDownload> RunningDownloads = new List<QueuedDownload>();
         private readonly List<QueuedDownload> CompletedDownloads = new List<QueuedDownload>();
 
-        public BackgroundDownloaderService(YoutubeDl YoutubeDl, IDownloaderServiceConfiguration serviceConfiguration, ILogger<BackgroundDownloaderService> logger) {
+        public BackgroundDownloaderService(IMediaDownloader YoutubeDl, IDownloaderServiceConfiguration serviceConfiguration, ILogger<BackgroundDownloaderService> logger) {
             this.YoutubeDl = YoutubeDl;
             this.ServiceConfiguration = serviceConfiguration;
             this.logger = logger;
         }
 
-        public Guid EnqueueDownload(string MediaUri, MediaFormat mediaFormat) {
+        public Guid EnqueueDownload(Uri MediaUri, MediaFormat mediaFormat) {
             QueuedDownload download = new QueuedDownload(
                 DownloadId: Guid.NewGuid(),
                 DownloadProgress: this.YoutubeDl.PrepareDownload(MediaUri, mediaFormat)

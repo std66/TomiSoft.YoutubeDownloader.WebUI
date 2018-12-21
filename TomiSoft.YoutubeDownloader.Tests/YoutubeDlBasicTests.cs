@@ -1,4 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using Tomisoft.YoutubeDownloader;
 using Tomisoft.YoutubeDownloader.Exceptions;
 using Tomisoft.YoutubeDownloader.Media;
@@ -26,7 +27,7 @@ namespace TomiSoft.YoutubeDownloader.Tests {
         public void CanHandleGetMediaInformationExceptionalCases() {
             MockForGetMediaInformationFaultyTest mock = new MockForGetMediaInformationFaultyTest();
             YoutubeDl dl = new YoutubeDl(mock);
-            dl.GetMediaInformation("http://something.com");
+            dl.GetMediaInformation(new Uri("http://something.com"));
         }
 
         [TestMethod]
@@ -60,7 +61,7 @@ namespace TomiSoft.YoutubeDownloader.Tests {
             );
 
             YoutubeDl downloader = new YoutubeDl(processMock);
-            IMediaInformation actual = downloader.GetMediaInformation(ExpectedVideoUri);
+            IMediaInformation actual = downloader.GetMediaInformation(new Uri(ExpectedVideoUri));
 
             Assert.IsTrue(processMock.ProcessStarted, "Youtube-dl was not started.");
             Assert.IsTrue(processMock.ParametersPassedCorrectly, "Command-line arguments were passed incorrectly to youtube-dl.");

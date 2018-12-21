@@ -6,7 +6,7 @@ using Tomisoft.YoutubeDownloader.Exceptions;
 using Tomisoft.YoutubeDownloader.Media;
 
 namespace Tomisoft.YoutubeDownloader {
-    public class YoutubeDl {
+    public class YoutubeDl : IMediaDownloader {
         private readonly IProcessFactory ProcessFactory;
 
         public YoutubeDl(IProcessFactory ProcessFactory) {
@@ -25,8 +25,8 @@ namespace Tomisoft.YoutubeDownloader {
             }
         }
 
-        public IMediaInformation GetMediaInformation(string MediaUri) {
-            using (IProcess p = this.ProcessFactory.Create("--dump-json", MediaUri)) {
+        public IMediaInformation GetMediaInformation(Uri MediaUri) {
+            using (IProcess p = this.ProcessFactory.Create("--dump-json", MediaUri.ToString())) {
                 p.Start();
                 p.WaitForExit();
 
@@ -43,11 +43,11 @@ namespace Tomisoft.YoutubeDownloader {
                     }
                 }
 
-                throw new MediaInformationExtractException(p, MediaUri);
+                throw new MediaInformationExtractException(p, MediaUri.ToString());
             }
         }
 
-        public DownloadProgress PrepareDownload(string MediaUri, MediaFormat MediaFormat) {
+        public DownloadProgress PrepareDownload(Uri MediaUri, MediaFormat MediaFormat) {
             IProcess process = null;
 
             Guid filenameGuid = Guid.NewGuid();
@@ -56,11 +56,11 @@ namespace Tomisoft.YoutubeDownloader {
 
             switch (MediaFormat) {
                 case MediaFormat.MP3Audio:
-                    process = this.ProcessFactory.Create("--newline", "--extract-audio", "--audio-format", "mp3", "-o", TargetFilename, MediaUri);
+                    process = this.ProcessFactory.Create("--newline", "--extract-audio", "--audio-format", "mp3", "-o", TargetFilename, MediaUri.ToString());
                     break;
 
                 case MediaFormat.Video:
-                    process = this.ProcessFactory.Create("--newline", "-o", TargetFilename, MediaUri);
+                    process = this.ProcessFactory.Create("--newline", "-o", TargetFilename, MediaUri.ToString());
                     break;
 
                 default:

@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Tomisoft.YoutubeDownloader;
@@ -41,7 +42,7 @@ namespace TomiSoft.YoutubeDownloader.Tests {
             Dictionary<double, bool> ExpectedPercentsToBeReported = new Dictionary<double, bool>(sample.ExpectedPercents.Distinct().Select(x => new KeyValuePair<double, bool>(x, false)));
             Dictionary<DownloadState, bool> ExpectedStatusesToBeReported = new Dictionary<DownloadState, bool>(sample.ExpectedDownloadStatuses.Distinct().Select(x => new KeyValuePair<DownloadState, bool>(x, false)));
 
-            using (DownloadProgress progress = downloader.PrepareDownload(sample.MediaUri, MediaFormat.MP3Audio)) {
+            using (DownloadProgress progress = downloader.PrepareDownload(new Uri(sample.MediaUri), MediaFormat.MP3Audio)) {
                 progress.DownloadStatusChanged += (o, e) => {
                     Assert.AreEqual(e, progress.Status, $"The download status value reported by event {nameof(DownloadProgress.DownloadStatusChanged)} ({e}) is not equal to the value set in {nameof(DownloadProgress.Status)} ({progress.Status}).");
                     ExpectedStatusesToBeReported[e] = true;

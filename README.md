@@ -11,11 +11,19 @@ Requirements
 Get started
 -----------
   * Download the executable youtube-dl from https://rg3.github.io/youtube-dl/
-  * Configure appsettings.json
-    * Set ExecutablePath to the path where the youtube-dl.exe is located.
-    * Set MaximumParallelDownloads according to how many downloads can be running simultaneously.
-    * Set DeleteFilesAfterMinutesElapsed according to how long do you want to keep downloaded files.
-  * Build solution and deploy TomiSoft.YoutubeDownloader.WebUI project to IIS.
+  * Download ffmpeg, ffprobe from https://www.ffmpeg.org/download.html and extract them next to the youtube-dl executable.
+  * Add IUSR read+execute rights to the folder that contains youtube-dl.
+  * Build solution and deploy TomiSoft.YoutubeDownloader.WebUI project to IIS:
+    * Create a new IIS website
+    * Configure the website's application pool:
+      * Set .NET CLR Version to "No managed code".
+      * The process model identity must be set to "LocalSystem", otherwise the youtube-dl cannot be executed.
+    * Deploy website
+    * Configure appsettings.json
+      * Set ExecutablePath to the path where the youtube-dl.exe is located.
+      * Set MaximumParallelDownloads according to how many downloads can be running simultaneously.
+      * Set DeleteFilesAfterMinutesElapsed according to how long do you want to keep downloaded files.
+  * Execute IISRESET in cmd.exe
   
 Contact
 -------

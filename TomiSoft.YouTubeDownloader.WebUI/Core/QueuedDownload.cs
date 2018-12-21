@@ -27,9 +27,7 @@ namespace TomiSoft.YouTubeDownloader.WebUI.Core {
 
         public void Dispose() {
             this.DownloadHandler.DownloadStatusChanged -= DownloadProgress_DownloadStatusChanged;
-
-            if (this.DownloadHandler is IDisposable disposable)
-                disposable.Dispose();
+            this.DownloadHandler.Dispose();
         }
 
         public override bool Equals(object obj) {

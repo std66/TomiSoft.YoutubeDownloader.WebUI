@@ -6,6 +6,6 @@ namespace Tomisoft.YoutubeDownloader {
     public interface IMediaDownloader {
         IMediaInformation GetMediaInformation(Uri MediaUri);
         string GetVersion();
-        DownloadProgress PrepareDownload(Uri MediaUri, MediaFormat MediaFormat);
+        IDownload PrepareDownload(Uri MediaUri, MediaFormat MediaFormat);
     }
 }

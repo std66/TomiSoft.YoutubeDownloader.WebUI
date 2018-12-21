@@ -39,13 +39,13 @@ namespace TomiSoft.YouTubeDownloader.WebUI.HostedServices {
             return download.DownloadID;
         }
 
-        public DownloadProgress GetDownloadStatus(Guid DownloadID) {
+        public IDownload GetDownloadStatus(Guid DownloadID) {
             QueuedDownload result = this.QueuedDownloads.Concat(this.RunningDownloads).Concat(this.CompletedDownloads).FirstOrDefault(x => x.DownloadID == DownloadID);
 
             if (result == null)
                 throw new InvalidOperationException($"Download not found with ID {DownloadID}.");
 
-            return result.DownloadProgress;
+            return result.DownloadHandler;
         }
 
         private void DownloadCompleted(object sender, Guid DownloadID) {
@@ -71,7 +71,7 @@ namespace TomiSoft.YouTubeDownloader.WebUI.HostedServices {
                 if (QueuedDownloads.TryDequeue(out QueuedDownload download)) {
                     RunningDownloads.Add(download);
                     download.DownloadCompleted += this.DownloadCompleted;
-                    download.DownloadProgress.Start();
+                    download.DownloadHandler.Start();
 
                     this.logger.LogInformation($"Download started with GUID: {download.DownloadID}");
                 }
@@ -82,8 +82,8 @@ namespace TomiSoft.YouTubeDownloader.WebUI.HostedServices {
             List<QueuedDownload> ToRemove = new List<QueuedDownload>();
 
             foreach (QueuedDownload download in this.CompletedDownloads.Where(x => DateTime.UtcNow - x.CompletedTimestamp > TimeSpan.FromMinutes(this.ServiceConfiguration.DeleteFilesAfterMinutesElapsed))) {
-                if (download.DownloadProgress.Status == DownloadState.Completed) {
-                    string filename = download.DownloadProgress.Filename;
+                if (download.DownloadHandler.Status == DownloadState.Completed) {
+                    string filename = download.DownloadHandler.Filename;
 
                     if (File.Exists(filename)) {
                         File.Delete(filename);

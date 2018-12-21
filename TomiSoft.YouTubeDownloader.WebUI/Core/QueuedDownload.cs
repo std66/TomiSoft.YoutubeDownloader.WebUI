@@ -4,18 +4,18 @@ using Tomisoft.YoutubeDownloader.Downloading;
 namespace TomiSoft.YouTubeDownloader.WebUI.Core {
     internal class QueuedDownload : IDisposable {
         public Guid DownloadID { get; }
-        public DownloadProgress DownloadProgress { get; }
+        public IDownload DownloadHandler { get; }
         public DateTime QueueTimestamp { get; }
         public DateTime CompletedTimestamp { get; private set; }
 
         public event EventHandler<Guid> DownloadCompleted;
 
-        public QueuedDownload(Guid DownloadId, DownloadProgress DownloadProgress) {
+        public QueuedDownload(Guid DownloadId, IDownload DownloadProgress) {
             this.DownloadID = DownloadId;
             this.QueueTimestamp = DateTime.UtcNow;
 
-            this.DownloadProgress = DownloadProgress;
-            this.DownloadProgress.DownloadStatusChanged += DownloadProgress_DownloadStatusChanged;
+            this.DownloadHandler = DownloadProgress;
+            this.DownloadHandler.DownloadStatusChanged += DownloadProgress_DownloadStatusChanged;
         }
 
         private void DownloadProgress_DownloadStatusChanged(object sender, DownloadState e) {
@@ -26,8 +26,10 @@ namespace TomiSoft.YouTubeDownloader.WebUI.Core {
         }
 
         public void Dispose() {
-            this.DownloadProgress.DownloadStatusChanged -= DownloadProgress_DownloadStatusChanged;
-            this.DownloadProgress.Dispose();
+            this.DownloadHandler.DownloadStatusChanged -= DownloadProgress_DownloadStatusChanged;
+
+            if (this.DownloadHandler is IDisposable disposable)
+                disposable.Dispose();
         }
 
         public override bool Equals(object obj) {

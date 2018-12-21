@@ -47,7 +47,7 @@ namespace Tomisoft.YoutubeDownloader {
             }
         }
 
-        public DownloadProgress PrepareDownload(Uri MediaUri, MediaFormat MediaFormat) {
+        public IDownload PrepareDownload(Uri MediaUri, MediaFormat MediaFormat) {
             IProcess process = null;
 
             Guid filenameGuid = Guid.NewGuid();

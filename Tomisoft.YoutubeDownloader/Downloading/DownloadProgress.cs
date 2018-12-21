@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Tomisoft.YoutubeDownloader.Downloading {
-    public class DownloadProgress : IDisposable {
+    public class DownloadProgress : IDownload {
         private DownloadState downloadState = DownloadState.WaitingForStart;
         private readonly IProcess DownloaderProcess;
         private double percentage;

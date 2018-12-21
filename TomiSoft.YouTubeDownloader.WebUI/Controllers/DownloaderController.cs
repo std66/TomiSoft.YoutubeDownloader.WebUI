@@ -46,7 +46,7 @@ namespace TomiSoft.YouTubeDownloader.WebUI.Controllers {
         public IActionResult GetProgress([FromQuery] string DownloadId) {
             if (Guid.TryParse(DownloadId, out Guid downloadGuid)) {
                 try {
-                    DownloadProgress progress = this.downloaderService.GetDownloadStatus(downloadGuid);
+                    IDownload progress = this.downloaderService.GetDownloadStatus(downloadGuid);
 
                     return new JsonResult(new {
                         DownloadStatus = progress.Status.ToString(),
@@ -65,7 +65,7 @@ namespace TomiSoft.YouTubeDownloader.WebUI.Controllers {
         public IActionResult DownloadFile([FromQuery] string DownloadId) {
             if (Guid.TryParse(DownloadId, out Guid downloadGuid)) {
                 try {
-                    DownloadProgress progress = this.downloaderService.GetDownloadStatus(downloadGuid);
+                    IDownload progress = this.downloaderService.GetDownloadStatus(downloadGuid);
 
                     if (progress.Status != DownloadState.Completed) {
                         return new ErrorResponse(ErrorCodes.DownloadNotCompleted, HttpStatusCode.PreconditionRequired).AsJsonResult();

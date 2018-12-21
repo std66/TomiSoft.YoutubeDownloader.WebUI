@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using Tomisoft.YoutubeDownloader.Downloading;
+using Tomisoft.YoutubeDownloader.Exceptions;
 using Tomisoft.YoutubeDownloader.Media;
 
 namespace Tomisoft.YoutubeDownloader {
@@ -42,7 +43,7 @@ namespace Tomisoft.YoutubeDownloader {
                     }
                 }
 
-                throw new Exception("There was an error while getting media information.");
+                throw new MediaInformationExtractException(p, MediaUri);
             }
         }
 

@@ -61,6 +61,13 @@ namespace TomiSoft.YoutubeDownloader.Tests.YoutubeDlMocks {
             return String.Join("", this.stdOut);
         }
 
+        public string GetErrorAsString() {
+            if (!this.ProcessStarted)
+                throw new InvalidOperationException($"This process was not started yet. Something invoked {nameof(GetErrorAsString)} before even starting the process.");
+
+            return String.Join("", this.stdErr);
+        }
+
         public void Start() {
             if (this.ProcessStarted)
                 throw new InvalidOperationException("This process was already started. Shouldn't be reused.");

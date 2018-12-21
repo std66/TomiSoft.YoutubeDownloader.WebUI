@@ -16,5 +16,6 @@ namespace Tomisoft.YoutubeDownloader {
         void Start();
         void WaitForExit();
         string GetOutputAsString();
+        string GetErrorAsString();
     }
 }

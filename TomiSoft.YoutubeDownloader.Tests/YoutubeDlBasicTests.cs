@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Tomisoft.YoutubeDownloader;
+using Tomisoft.YoutubeDownloader.Exceptions;
 using Tomisoft.YoutubeDownloader.Media;
 using TomiSoft.YoutubeDownloader.Tests.YoutubeDlMocks;
 
@@ -18,6 +19,14 @@ namespace TomiSoft.YoutubeDownloader.Tests {
             Assert.IsTrue(processMock.ParametersPassedCorrectly);
             Assert.IsTrue(processMock.ExitedSuccessfully);
             Assert.AreEqual(expectedVersion, actual);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(MediaInformationExtractException), AllowDerivedTypes = true)]
+        public void CanHandleGetMediaInformationExceptionalCases() {
+            MockForGetMediaInformationFaultyTest mock = new MockForGetMediaInformationFaultyTest();
+            YoutubeDl dl = new YoutubeDl(mock);
+            dl.GetMediaInformation("http://something.com");
         }
 
         [TestMethod]

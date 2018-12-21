@@ -37,7 +37,11 @@ namespace Tomisoft.YoutubeDownloader {
         }
 
         public string GetOutputAsString() {
-            return String.Join(String.Empty, this.output);
+            return String.Join(Environment.NewLine, this.output);
+        }
+
+        public string GetErrorAsString() {
+            return String.Join(Environment.NewLine, this.error);
         }
 
         protected override void Dispose(bool disposing) {
@@ -62,7 +66,7 @@ namespace Tomisoft.YoutubeDownloader {
                 RedirectStandardOutput = true,
                 UseShellExecute = false,
                 FileName = this.ExecutablePath,
-                Arguments = String.Join(' ', this.Arguments)
+                Arguments = String.Join(' ', this.Arguments),
             };
         }
     }

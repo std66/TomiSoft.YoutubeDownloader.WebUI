@@ -27,4 +27,4 @@ Get started
   
 Contact
 -------
-  Sinku Tamás (sinkutamas@gmail.com)
+  Tamás Sinku (sinkutamas@gmail.com)

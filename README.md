@@ -24,7 +24,12 @@ Get started
       * Set MaximumParallelDownloads according to how many downloads can be running simultaneously.
       * Set DeleteFilesAfterMinutesElapsed according to how long do you want to keep downloaded files.
   * Execute IISRESET in cmd.exe
-  
+
+Screenshots
+-----------
+  ![Screenshot 1](https://i.postimg.cc/8577MQnb/K-pkiv-g-s.png)
+  ![Screenshot 2](https://i.postimg.cc/rpndDFgm/K-pkiv-g-s-2.png)
+
 Contact
 -------
   Tamás Sinku (sinkutamas@gmail.com)

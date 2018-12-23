@@ -1,11 +1,11 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.IO;
-using Tomisoft.YoutubeDownloader.Downloading;
-using Tomisoft.YoutubeDownloader.Exceptions;
-using Tomisoft.YoutubeDownloader.Media;
+using TomiSoft.YoutubeDownloader.Downloading;
+using TomiSoft.YoutubeDownloader.Exceptions;
+using TomiSoft.YoutubeDownloader.Media;
 
-namespace Tomisoft.YoutubeDownloader {
+namespace TomiSoft.YoutubeDownloader {
     public class YoutubeDl : IMediaDownloader {
         private readonly IProcessFactory ProcessFactory;
 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace Tomisoft.YoutubeDownloader {
+namespace TomiSoft.YoutubeDownloader {
     public interface IProcess : IDisposable {
         int ExitCode { get; }
         bool ExitedSuccessfully { get; }

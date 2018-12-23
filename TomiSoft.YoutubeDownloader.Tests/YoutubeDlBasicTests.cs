@@ -1,8 +1,8 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using Tomisoft.YoutubeDownloader;
-using Tomisoft.YoutubeDownloader.Exceptions;
-using Tomisoft.YoutubeDownloader.Media;
+using TomiSoft.YoutubeDownloader;
+using TomiSoft.YoutubeDownloader.Exceptions;
+using TomiSoft.YoutubeDownloader.Media;
 using TomiSoft.YoutubeDownloader.Tests.YoutubeDlMocks;
 
 namespace TomiSoft.YoutubeDownloader.Tests {

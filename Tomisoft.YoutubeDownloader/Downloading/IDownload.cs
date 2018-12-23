@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Tomisoft.YoutubeDownloader.Downloading {
+namespace TomiSoft.YoutubeDownloader.Downloading {
     public interface IDownload : IDisposable {
         string Filename { get; }
         double Percentage { get; }

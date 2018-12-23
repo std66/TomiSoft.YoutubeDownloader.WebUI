@@ -1,6 +1,6 @@
 ﻿using System;
-using Tomisoft.YoutubeDownloader.Downloading;
-using Tomisoft.YoutubeDownloader.Media;
+using TomiSoft.YoutubeDownloader.Downloading;
+using TomiSoft.YoutubeDownloader.Media;
 
 namespace TomiSoft.YouTubeDownloader.WebUI.HostedServices {
     public interface IDownloaderService {

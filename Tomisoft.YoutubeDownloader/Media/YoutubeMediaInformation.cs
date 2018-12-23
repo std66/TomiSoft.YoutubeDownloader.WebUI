@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Tomisoft.YoutubeDownloader.Media {
+namespace TomiSoft.YoutubeDownloader.Media {
     public class YoutubeMediaInformation : MediaInformation {
         
         [JsonProperty("tags")]

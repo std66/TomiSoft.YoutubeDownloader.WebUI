@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Tomisoft.YoutubeDownloader {
+namespace TomiSoft.YoutubeDownloader {
     public class ProcessFactory : IProcessFactory {
         private readonly string ExecutablePath;
 

@@ -1,8 +1,8 @@
 ﻿using System;
-using Tomisoft.YoutubeDownloader.Downloading;
-using Tomisoft.YoutubeDownloader.Media;
+using TomiSoft.YoutubeDownloader.Downloading;
+using TomiSoft.YoutubeDownloader.Media;
 
-namespace Tomisoft.YoutubeDownloader {
+namespace TomiSoft.YoutubeDownloader {
     public interface IMediaDownloader {
         IMediaInformation GetMediaInformation(Uri MediaUri);
         string GetVersion();

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Tomisoft.YoutubeDownloader;
+using TomiSoft.YoutubeDownloader;
 using TomiSoft.YouTubeDownloader.WebUI.Core;
 using TomiSoft.YouTubeDownloader.WebUI.Data;
 using TomiSoft.YouTubeDownloader.WebUI.HostedServices;

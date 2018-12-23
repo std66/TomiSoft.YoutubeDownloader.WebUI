@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Tomisoft.YoutubeDownloader.Media {
+namespace TomiSoft.YoutubeDownloader.Media {
     public class MediaInformation : IMediaInformation {
         [JsonProperty("extractor")]
         internal string Extractor { get; set; }

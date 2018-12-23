@@ -1,4 +1,4 @@
-﻿namespace Tomisoft.YoutubeDownloader.Media {
+﻿namespace TomiSoft.YoutubeDownloader.Media {
     public interface IMediaInformation {
         string MediaUri { get; }
         string Title { get; }

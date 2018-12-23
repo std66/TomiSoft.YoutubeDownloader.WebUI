@@ -7,9 +7,9 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Tomisoft.YoutubeDownloader;
-using Tomisoft.YoutubeDownloader.Downloading;
-using Tomisoft.YoutubeDownloader.Media;
+using TomiSoft.YoutubeDownloader;
+using TomiSoft.YoutubeDownloader.Downloading;
+using TomiSoft.YoutubeDownloader.Media;
 using TomiSoft.YouTubeDownloader.WebUI.Core;
 
 namespace TomiSoft.YouTubeDownloader.WebUI.HostedServices {

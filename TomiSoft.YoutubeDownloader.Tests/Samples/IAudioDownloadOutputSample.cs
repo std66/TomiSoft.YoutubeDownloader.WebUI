@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Tomisoft.YoutubeDownloader.Downloading;
+using TomiSoft.YoutubeDownloader.Downloading;
 
 namespace TomiSoft.YoutubeDownloader.Tests.Samples {
     interface  IAudioDownloadOutputSample {

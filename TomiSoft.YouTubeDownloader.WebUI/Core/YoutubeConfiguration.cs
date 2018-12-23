@@ -1,4 +1,4 @@
-﻿using Tomisoft.YoutubeDownloader;
+﻿using TomiSoft.YoutubeDownloader;
 
 namespace TomiSoft.YouTubeDownloader.WebUI.Core {
     public class YoutubeConfiguration : IYoutubeDlConfiguration, IDownloaderServiceConfiguration {

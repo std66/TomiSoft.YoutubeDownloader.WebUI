@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace Tomisoft.YoutubeDownloader {
+namespace TomiSoft.YoutubeDownloader {
     internal class CapturingProcess : Process, IProcess {
         private readonly string ExecutablePath;
         private readonly IEnumerable<string> Arguments;

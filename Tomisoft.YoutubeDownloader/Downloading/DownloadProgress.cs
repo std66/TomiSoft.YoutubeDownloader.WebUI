@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace Tomisoft.YoutubeDownloader.Downloading {
+namespace TomiSoft.YoutubeDownloader.Downloading {
     public class DownloadProgress : IDownload {
         private DownloadState downloadState = DownloadState.WaitingForStart;
         private readonly IProcess DownloaderProcess;

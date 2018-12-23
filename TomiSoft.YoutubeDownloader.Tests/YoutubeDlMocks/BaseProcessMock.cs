@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using Tomisoft.YoutubeDownloader;
+using TomiSoft.YoutubeDownloader;
 
 namespace TomiSoft.YoutubeDownloader.Tests.YoutubeDlMocks {
     abstract class BaseProcessMock : IProcess, IProcessFactory {

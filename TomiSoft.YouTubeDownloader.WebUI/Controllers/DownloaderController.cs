@@ -2,9 +2,9 @@
 using System.IO;
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
-using Tomisoft.YoutubeDownloader;
-using Tomisoft.YoutubeDownloader.Downloading;
-using Tomisoft.YoutubeDownloader.Media;
+using TomiSoft.YoutubeDownloader;
+using TomiSoft.YoutubeDownloader.Downloading;
+using TomiSoft.YoutubeDownloader.Media;
 using TomiSoft.YouTubeDownloader.WebUI.Core;
 using TomiSoft.YouTubeDownloader.WebUI.Data;
 using TomiSoft.YouTubeDownloader.WebUI.HostedServices;
@@ -39,10 +39,10 @@ namespace TomiSoft.YouTubeDownloader.WebUI.Controllers {
         }
 
         public IActionResult EnqueueDownload([FromQuery] string MediaUri, [FromQuery] string MediaFormat) {
-            MediaFormat TargetFormat = Tomisoft.YoutubeDownloader.Media.MediaFormat.Video;
+            MediaFormat TargetFormat = TomiSoft.YoutubeDownloader.Media.MediaFormat.Video;
 
             if (MediaFormat == "mp3audio") {
-                TargetFormat = Tomisoft.YoutubeDownloader.Media.MediaFormat.MP3Audio;
+                TargetFormat = TomiSoft.YoutubeDownloader.Media.MediaFormat.MP3Audio;
             }
 
             Uri mediaUri = new Uri(MediaUri);

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Tomisoft.YoutubeDownloader.Exceptions {
+namespace TomiSoft.YoutubeDownloader.Exceptions {
     public class MediaInformationExtractException : Exception {
         public string MediaUri { get; }
         public string StandardError { get; }

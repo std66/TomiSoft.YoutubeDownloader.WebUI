@@ -1,5 +1,5 @@
 ﻿using System;
-using Tomisoft.YoutubeDownloader.Downloading;
+using TomiSoft.YoutubeDownloader.Downloading;
 
 namespace TomiSoft.YouTubeDownloader.WebUI.Core {
     internal class QueuedDownload : IDisposable {

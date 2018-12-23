@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Tomisoft.YoutubeDownloader\Tomisoft.YoutubeDownloader.csproj" />
+    <ProjectReference Include="..\Tomisoft.YoutubeDownloader\TomiSoft.YoutubeDownloader.csproj" />
   </ItemGroup>
 
 </Project>

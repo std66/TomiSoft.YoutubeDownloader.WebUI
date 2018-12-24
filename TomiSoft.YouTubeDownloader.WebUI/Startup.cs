@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using TomiSoft.YoutubeDownloader;
 using TomiSoft.YouTubeDownloader.WebUI.Core;
 using TomiSoft.YouTubeDownloader.WebUI.Core.FileManagement;
+using TomiSoft.YouTubeDownloader.WebUI.Core.Media;
 using TomiSoft.YouTubeDownloader.WebUI.Data;
 using TomiSoft.YouTubeDownloader.WebUI.HostedServices;
 
@@ -41,6 +42,7 @@ namespace TomiSoft.YouTubeDownloader.WebUI {
             services.AddSingleton<IProcessFactory, ProcessFactory>();
             services.AddSingleton<IMediaDownloader, YoutubeDl>();
             services.AddSingleton<IFileManager, FileManager>();
+            services.AddSingleton<ITagInfoWriter, TaglibSharpTagInfoWriter>();
             
             services.AddSingleton<IDownloaderService, BackgroundDownloaderService>();
             services.AddHostedService<BackgroundDownloaderHostedServiceAdapter>();

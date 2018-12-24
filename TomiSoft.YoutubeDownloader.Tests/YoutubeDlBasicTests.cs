@@ -1,6 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using TomiSoft.YoutubeDownloader;
 using TomiSoft.YoutubeDownloader.Exceptions;
 using TomiSoft.YoutubeDownloader.Media;
 using TomiSoft.YoutubeDownloader.Tests.YoutubeDlMocks;
@@ -67,18 +66,22 @@ namespace TomiSoft.YoutubeDownloader.Tests {
             Assert.IsTrue(processMock.ParametersPassedCorrectly, "Command-line arguments were passed incorrectly to youtube-dl.");
 
             Assert.IsNotNull(actual);
-            Assert.IsInstanceOfType(actual, typeof(MediaInformation));
-            Assert.IsInstanceOfType(actual, typeof(YoutubeMediaInformation));
+            Assert.IsInstanceOfType(actual, typeof(ILikeableMedia));
+            Assert.IsInstanceOfType(actual, typeof(IIdentifiedSong));
 
-            YoutubeMediaInformation actual2 = (YoutubeMediaInformation)actual;
+            Assert.AreEqual(ExpectedVideoUri, actual.MediaUri);
+            Assert.AreEqual(ExpectedDuration, actual.Duration);
+            Assert.AreEqual(ExpectedVideoTitle, actual.Title);
+            Assert.AreEqual(ExpectedDescription, actual.Description);
+            Assert.AreEqual(ExpectedVideoID, actual.VideoId);
 
-            Assert.AreEqual(ExpectedVideoUri, actual2.MediaUri);
-            Assert.AreEqual(ExpectedDuration, actual2.Duration);
-            Assert.AreEqual(ExpectedVideoTitle, actual2.Title);
-            Assert.AreEqual(ExpectedDescription, actual2.Description);
-            Assert.AreEqual(ExpectedVideoID, actual2.VideoId);
+            ILikeableMedia actual2 = (ILikeableMedia)actual;
             Assert.AreEqual(ExpectedLikes, actual2.Likes);
             Assert.AreEqual(ExpectedDislikes, actual2.Dislikes);
+
+            IIdentifiedSong actual3 = (IIdentifiedSong)actual;
+            Assert.AreEqual(ExpectedIdentifiedArtist, actual3.Artist);
+            Assert.AreEqual(ExpectedIdentifiedSong, actual3.TrackTitle);
         }
     }
 }

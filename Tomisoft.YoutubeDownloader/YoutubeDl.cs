@@ -32,15 +32,7 @@ namespace TomiSoft.YoutubeDownloader {
 
                 if (p.ExitedSuccessfully) {
                     string StdOut = p.GetOutputAsString();
-                    string Extractor = JsonConvert.DeserializeObject<MediaInformation>(StdOut).Extractor;
-
-                    switch (Extractor) {
-                        case "youtube":
-                            return JsonConvert.DeserializeObject<YoutubeMediaInformation>(StdOut);
-
-                        default:
-                            return JsonConvert.DeserializeObject<MediaInformation>(StdOut);
-                    }
+                    return MediaInformationFactory.Create(StdOut);
                 }
 
                 throw new MediaInformationExtractException(p, MediaUri.ToString());

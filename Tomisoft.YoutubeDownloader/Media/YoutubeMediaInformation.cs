@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace TomiSoft.YoutubeDownloader.Media {
-    public class YoutubeMediaInformation : MediaInformation {
+    public class YoutubeMediaInformation : MediaInformation, ILikeableMedia {
         
         [JsonProperty("tags")]
         public string[] Tags { get; set; }

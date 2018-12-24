@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TomiSoft.YouTubeDownloader.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TomiSoft.YoutubeDownloader.Tests", "TomiSoft.YoutubeDownloader.Tests\TomiSoft.YoutubeDownloader.Tests.csproj", "{1EDA11ED-0EE7-4A7D-AED1-B946418D0987}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TomiSoft.YoutubeDownloader.WebUI.Tests", "TomiSoft.YoutubeDownloader.WebUI.Tests\TomiSoft.YoutubeDownloader.WebUI.Tests.csproj", "{1F07FE7E-946E-4549-867B-39A9565CBEA2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{1EDA11ED-0EE7-4A7D-AED1-B946418D0987}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1EDA11ED-0EE7-4A7D-AED1-B946418D0987}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1EDA11ED-0EE7-4A7D-AED1-B946418D0987}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F07FE7E-946E-4549-867B-39A9565CBEA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F07FE7E-946E-4549-867B-39A9565CBEA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F07FE7E-946E-4549-867B-39A9565CBEA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F07FE7E-946E-4549-867B-39A9565CBEA2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

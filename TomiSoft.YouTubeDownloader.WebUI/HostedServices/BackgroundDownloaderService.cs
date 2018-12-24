@@ -3,7 +3,6 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,21 +10,24 @@ using TomiSoft.YoutubeDownloader;
 using TomiSoft.YoutubeDownloader.Downloading;
 using TomiSoft.YoutubeDownloader.Media;
 using TomiSoft.YouTubeDownloader.WebUI.Core;
+using TomiSoft.YouTubeDownloader.WebUI.Core.FileManagement;
 
 namespace TomiSoft.YouTubeDownloader.WebUI.HostedServices {
     public class BackgroundDownloaderService : BackgroundService, IDownloaderService {
         private readonly IMediaDownloader YoutubeDl;
         private readonly IDownloaderServiceConfiguration ServiceConfiguration;
         private readonly ILogger logger;
+        private readonly IFileManager fileManager;
 
         private readonly ConcurrentQueue<QueuedDownload> QueuedDownloads = new ConcurrentQueue<QueuedDownload>();
         private readonly List<QueuedDownload> RunningDownloads = new List<QueuedDownload>();
         private readonly List<QueuedDownload> CompletedDownloads = new List<QueuedDownload>();
 
-        public BackgroundDownloaderService(IMediaDownloader YoutubeDl, IDownloaderServiceConfiguration serviceConfiguration, ILogger<BackgroundDownloaderService> logger) {
+        public BackgroundDownloaderService(IMediaDownloader YoutubeDl, IDownloaderServiceConfiguration serviceConfiguration, ILogger<BackgroundDownloaderService> logger, IFileManager fileManager) {
             this.YoutubeDl = YoutubeDl;
             this.ServiceConfiguration = serviceConfiguration;
             this.logger = logger;
+            this.fileManager = fileManager;
         }
 
         public Guid EnqueueDownload(Uri MediaUri, MediaFormat mediaFormat) {
@@ -81,13 +83,16 @@ namespace TomiSoft.YouTubeDownloader.WebUI.HostedServices {
         private void RemoveCompletedDownloads() {
             List<QueuedDownload> ToRemove = new List<QueuedDownload>();
 
-            foreach (QueuedDownload download in this.CompletedDownloads.Where(x => DateTime.UtcNow - x.CompletedTimestamp > TimeSpan.FromMinutes(this.ServiceConfiguration.DeleteFilesAfterMinutesElapsed))) {
+            foreach (QueuedDownload download in this.CompletedDownloads.Where(x => DateTime.UtcNow - x.CompletedTimestamp > TimeSpan.FromMilliseconds(this.ServiceConfiguration.DeleteFilesAfterMillisecondsElapsed))) {
                 if (download.DownloadHandler.Status == DownloadState.Completed) {
                     string filename = download.DownloadHandler.Filename;
 
-                    if (File.Exists(filename)) {
-                        File.Delete(filename);
+                    IFile file = this.fileManager.GetFile(filename);
+                    if (file.Exists && file.Delete()) {
                         this.logger.LogInformation($"File deleted for download with GUID: {download.DownloadID}");
+                    }
+                    else {
+                        this.logger.LogWarning($"File cannot be deleted or not exists for download with GUID: {download.DownloadID}");
                     }
                 }
 

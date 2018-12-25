@@ -1,6 +1,6 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.IO;
+using TomiSoft.Common.FileManagement;
 using TomiSoft.YoutubeDownloader.Downloading;
 using TomiSoft.YoutubeDownloader.Exceptions;
 using TomiSoft.YoutubeDownloader.Media;
@@ -60,6 +60,13 @@ namespace TomiSoft.YoutubeDownloader {
             }
             
             return new DownloadProgress(process, filenameGuid, targetDirectory);
+        }
+
+        public void Update() {
+            using (IProcess p = this.ProcessFactory.Create("-U")) {
+                p.Start();
+                p.WaitForExit();
+            }
         }
     }
 }

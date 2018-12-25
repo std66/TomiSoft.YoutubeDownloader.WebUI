@@ -6,11 +6,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using TomiSoft.Common.FileManagement;
 using TomiSoft.YoutubeDownloader;
 using TomiSoft.YoutubeDownloader.Downloading;
 using TomiSoft.YoutubeDownloader.Media;
 using TomiSoft.YouTubeDownloader.WebUI.Core;
-using TomiSoft.YouTubeDownloader.WebUI.Core.FileManagement;
 
 namespace TomiSoft.YouTubeDownloader.WebUI.HostedServices {
     public class BackgroundDownloaderService : BackgroundService, IDownloaderService {
@@ -22,6 +22,9 @@ namespace TomiSoft.YouTubeDownloader.WebUI.HostedServices {
         private readonly ConcurrentQueue<QueuedDownload> QueuedDownloads = new ConcurrentQueue<QueuedDownload>();
         private readonly List<QueuedDownload> RunningDownloads = new List<QueuedDownload>();
         private readonly List<QueuedDownload> CompletedDownloads = new List<QueuedDownload>();
+
+        private DateTime LastUpdate;
+        private bool IsUpdating = false;
 
         public BackgroundDownloaderService(IMediaDownloader YoutubeDl, IDownloaderServiceConfiguration serviceConfiguration, ILogger<BackgroundDownloaderService> logger, IFileManager fileManager) {
             this.YoutubeDl = YoutubeDl;
@@ -63,12 +66,39 @@ namespace TomiSoft.YouTubeDownloader.WebUI.HostedServices {
             while (!stoppingToken.IsCancellationRequested) {
                 StartNewDownloadsFromQueue();
                 RemoveCompletedDownloads();
+                UpdateDownloader();
 
                 await Task.Delay(500);
             }
         }
 
+        private void UpdateDownloader() {
+            if (!this.IsUpdating && DateTime.UtcNow - this.LastUpdate > TimeSpan.FromDays(1)) {
+                this.IsUpdating = true;
+                this.logger.LogInformation($"Preparing for daily maintenance update. There are {this.RunningDownloads.Count} downloads to be completed before updating.");
+            }
+
+            if (this.IsUpdating && RunningDownloads.Count == 0) {
+                this.logger.LogInformation("Starting daily maintenance update...");
+
+                string OldVersion = this.YoutubeDl.GetVersion();
+                this.YoutubeDl.Update();
+                string NewVersion = this.YoutubeDl.GetVersion();
+
+                if (OldVersion != NewVersion)
+                    this.logger.LogInformation($"Daily maintenance update has completed. Updated from version '{OldVersion}' to '{NewVersion}'.");
+                else
+                    this.logger.LogInformation($"Daily maintenance update has completed. There is no new version available. Current version is '{NewVersion}'.");
+
+                this.LastUpdate = DateTime.UtcNow;
+                this.IsUpdating = false;
+            }
+        }
+
         private void StartNewDownloadsFromQueue() {
+            if (this.IsUpdating)
+                return;
+
             if (!QueuedDownloads.IsEmpty && RunningDownloads.Count < ServiceConfiguration.MaximumParallelDownloads) {
                 if (QueuedDownloads.TryDequeue(out QueuedDownload download)) {
                     RunningDownloads.Add(download);

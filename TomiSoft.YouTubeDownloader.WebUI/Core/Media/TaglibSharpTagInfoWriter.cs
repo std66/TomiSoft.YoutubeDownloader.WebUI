@@ -11,7 +11,7 @@ namespace TomiSoft.YouTubeDownloader.WebUI.Core.Media {
             try {
                 f.Save();
             }
-            catch (Exception e) {
+            catch (Exception) {
                 return false;
             }
 

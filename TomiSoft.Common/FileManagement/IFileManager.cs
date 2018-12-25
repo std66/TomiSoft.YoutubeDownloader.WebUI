@@ -1,4 +1,4 @@
-﻿namespace TomiSoft.YouTubeDownloader.WebUI.Core.FileManagement {
+﻿namespace TomiSoft.Common.FileManagement {
     public interface IFileManager {
         IFile GetFile(string Path);
     }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 
 namespace TomiSoft.YoutubeDownloader {
     internal class CapturingProcess : Process, IProcess {
@@ -67,6 +68,7 @@ namespace TomiSoft.YoutubeDownloader {
                 UseShellExecute = false,
                 FileName = this.ExecutablePath,
                 Arguments = String.Join(' ', this.Arguments),
+                WorkingDirectory = Path.GetDirectoryName(this.ExecutablePath)
             };
         }
     }

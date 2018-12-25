@@ -7,5 +7,6 @@ namespace TomiSoft.YoutubeDownloader {
         IMediaInformation GetMediaInformation(Uri MediaUri);
         string GetVersion();
         IDownload PrepareDownload(Uri MediaUri, MediaFormat MediaFormat);
+        void Update();
     }
 }

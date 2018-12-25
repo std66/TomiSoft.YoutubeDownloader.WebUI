@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\TomiSoft.Common\TomiSoft.Common.csproj" />
     <ProjectReference Include="..\Tomisoft.YoutubeDownloader\TomiSoft.YoutubeDownloader.csproj" />
   </ItemGroup>
 

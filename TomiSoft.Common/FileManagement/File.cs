@@ -35,6 +35,20 @@ namespace TomiSoft.Common.FileManagement {
             return new File(NewName);
         }
 
+        public TextReader GetTextReader() {
+            if (!this.Exists)
+                throw new InvalidOperationException($"File cannot be opened for reading because it does not exists: '{this.Path}'");
+
+            return System.IO.File.OpenText(this.Path);
+        }
+
+        public TextWriter GetTextWriter() {
+            if (!this.Exists)
+                throw new InvalidOperationException($"File cannot be opened for writing because it does not exists: '{this.Path}'");
+
+            return new StreamWriter(System.IO.File.OpenWrite(Path));
+        }
+
         public File(string Path) {
             this.Path = Path;
         }

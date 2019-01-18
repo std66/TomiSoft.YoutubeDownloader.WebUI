@@ -14,6 +14,8 @@ using TomiSoft.YouTubeDownloader.WebUI.Core;
 
 namespace TomiSoft.YouTubeDownloader.WebUI.HostedServices {
     public class BackgroundDownloaderService : BackgroundService, IDownloaderService {
+        private const string LastUpdateFileName = "LastUpdate.DateTime.txt";
+
         private readonly IMediaDownloader YoutubeDl;
         private readonly IDownloaderServiceConfiguration ServiceConfiguration;
         private readonly ILogger logger;
@@ -23,8 +25,18 @@ namespace TomiSoft.YouTubeDownloader.WebUI.HostedServices {
         private readonly List<QueuedDownload> RunningDownloads = new List<QueuedDownload>();
         private readonly List<QueuedDownload> CompletedDownloads = new List<QueuedDownload>();
 
-        private DateTime LastUpdate;
+        private DateTime LastUpdate {
+            get {
+                return this.mLastUpdate;
+            }
+            set {
+                this.mLastUpdate = value;
+                this.fileManager.TryCreateTextFile(LastUpdateFileName, value.ToString(), Common.FileManagement.Permissions.FileCreationPermission.AllowOverwrite, out _);
+            }
+        }
+
         private bool IsUpdating = false;
+        private DateTime mLastUpdate = DateTime.UtcNow;
 
         public BackgroundDownloaderService(IMediaDownloader YoutubeDl, IDownloaderServiceConfiguration serviceConfiguration, ILogger<BackgroundDownloaderService> logger, IFileManager fileManager) {
             this.YoutubeDl = YoutubeDl;
@@ -63,12 +75,29 @@ namespace TomiSoft.YouTubeDownloader.WebUI.HostedServices {
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken) {
+            this.logger.LogInformation($"{nameof(BackgroundDownloaderService)} has started.");
+            LoadLastUpdateTimeFromFile();
+
             while (!stoppingToken.IsCancellationRequested) {
                 StartNewDownloadsFromQueue();
                 RemoveCompletedDownloads();
                 UpdateDownloader();
 
                 await Task.Delay(500);
+            }
+
+            this.logger.LogInformation($"{nameof(BackgroundDownloaderService)} has stopped because of a cancellation request.");
+        }
+
+        private void LoadLastUpdateTimeFromFile() {
+            IFile file = this.fileManager.GetFile(LastUpdateFileName);
+            if (file.Exists) {
+                this.LastUpdate = DateTime.Parse(file.ReadAllText());
+                this.logger.LogInformation($"Last maintenance update was executed on {this.LastUpdate}");
+            }
+            else {
+                this.LastUpdate = DateTime.UtcNow.AddDays(-2);
+                this.logger.LogInformation("There is no last maintenance update status persisted. Update process has enforced.");
             }
         }
 

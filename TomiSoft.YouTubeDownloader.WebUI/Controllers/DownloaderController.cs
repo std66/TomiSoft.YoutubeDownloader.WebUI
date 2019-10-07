@@ -23,85 +23,39 @@ namespace TomiSoft.YouTubeDownloader.WebUI.Controllers {
             this.filenameDatabase = filenameDatabase;
         }
 
-        public IActionResult GetMediaInformation([FromQuery] string MediaUri) {
-            if (String.IsNullOrWhiteSpace(MediaUri))
-                return new ErrorResponse(ErrorCodes.MediaUriIsEmpty, HttpStatusCode.BadRequest).AsJsonResult();
-
-            if (!Uri.IsWellFormedUriString(MediaUri, UriKind.Absolute))
-                return new ErrorResponse(ErrorCodes.MalformedMediaUri, HttpStatusCode.BadRequest).AsJsonResult();
-
-            Uri mediaUri = new Uri(MediaUri);
-
-            IMediaInformation info = this.youtubeDl.GetMediaInformation(mediaUri);
-            this.filenameDatabase.AddFilename(mediaUri, FilenameHelper.RemoveNotAllowedChars(info.Title));
+        public IActionResult GetMediaInformation([FromQuery] Uri MediaUri) {
+            IMediaInformation info = this.youtubeDl.GetMediaInformation(MediaUri);
+            this.filenameDatabase.AddFilename(MediaUri, FilenameHelper.RemoveNotAllowedChars(info.Title));
 
             return new JsonResult(info);
         }
 
-        public IActionResult EnqueueDownload([FromQuery] string MediaUri, [FromQuery] string MediaFormat) {
-            MediaFormat TargetFormat = TomiSoft.YoutubeDownloader.Media.MediaFormat.Video;
+        public IActionResult DownloadFile([FromQuery] Guid DownloadId) {
+            IDownload progress;
 
-            if (MediaFormat == "mp3audio") {
-                TargetFormat = TomiSoft.YoutubeDownloader.Media.MediaFormat.MP3Audio;
+            try {
+                progress = this.downloaderService.GetDownloadStatus(DownloadId);
+            }
+            catch (InvalidOperationException) {
+                return new ErrorResponse(ErrorCodes.DownloadNotFound, HttpStatusCode.NotFound).AsJsonResult();
             }
 
-            Uri mediaUri = new Uri(MediaUri);
-            Guid downloadId = downloaderService.EnqueueDownload(mediaUri, TargetFormat);
-            this.filenameDatabase.AssignDownloadId(mediaUri, downloadId);
+            if (progress.Status != DownloadState.Completed) {
+                return new ErrorResponse(ErrorCodes.DownloadNotCompleted, HttpStatusCode.PreconditionRequired).AsJsonResult();
+            }
 
-            return new JsonResult(new {
-                DownloadId = downloadId
-            });
-        }
+            Stream s = System.IO.File.OpenRead(progress.Filename);
+            var contentType = "application/octet-stream";
 
-        public IActionResult GetProgress([FromQuery] string DownloadId) {
-            if (Guid.TryParse(DownloadId, out Guid downloadGuid)) {
-                try {
-                    IDownload progress = this.downloaderService.GetDownloadStatus(downloadGuid);
-
-                    return new JsonResult(new {
-                        DownloadStatus = progress.Status.ToString(),
-                        Percent = progress.Percentage
-                    });
-                }
-                catch (InvalidOperationException) {
-                    return new ErrorResponse(ErrorCodes.DownloadNotFound, HttpStatusCode.NotFound).AsJsonResult();
-                }
+            string fileName = this.filenameDatabase.GetFilename(DownloadId);
+            if (fileName != null) {
+                fileName += Path.GetExtension(progress.Filename);
             }
             else {
-                return new ErrorResponse(ErrorCodes.InvalidDownloadId, HttpStatusCode.BadRequest).AsJsonResult();
+                fileName = progress.Filename;
             }
-        }
 
-        public IActionResult DownloadFile([FromQuery] string DownloadId) {
-            if (Guid.TryParse(DownloadId, out Guid downloadGuid)) {
-                try {
-                    IDownload progress = this.downloaderService.GetDownloadStatus(downloadGuid);
-
-                    if (progress.Status != DownloadState.Completed) {
-                        return new ErrorResponse(ErrorCodes.DownloadNotCompleted, HttpStatusCode.PreconditionRequired).AsJsonResult();
-                    }
-
-                    Stream s = System.IO.File.OpenRead(progress.Filename);
-                    var contentType = "application/octet-stream";
-
-                    string fileName = this.filenameDatabase.GetFilename(downloadGuid);
-                    if (fileName != null) {
-                        fileName += Path.GetExtension(progress.Filename);
-                    }
-                    else {
-                        fileName = progress.Filename;
-                    }
-
-                    return File(s, contentType, fileName);
-                }
-                catch (InvalidOperationException) {
-                    return new ErrorResponse(ErrorCodes.DownloadNotFound, HttpStatusCode.NotFound).AsJsonResult();
-                }
-            }
-            else {
-                return new ErrorResponse(ErrorCodes.InvalidDownloadId, HttpStatusCode.BadRequest).AsJsonResult();
-            }
+            return File(s, contentType, fileName);
         }
     }
 }

@@ -1,136 +1,149 @@
-﻿var pages = [];
-var downloadId;
-var downloadProgressInterval;
+﻿var vm = null;
 
-$(document).ready(function () {
-    pages["loaderPage"] = $("#loader");
-    pages["startPage"] = $("#mediaUriInputBox");
-    pages["statusPage"] = $("#downloadStatus");
-});
+class ViewModel {
+    constructor(signalRConnection, pageManager) {
+        this.signalR = signalRConnection;
+        this.pageManager = pageManager;
+        this.downloadId = null;
 
-function initDownload() {
-    var mediaUri = $("#mediaUri").val();
-    var targetFormat = $("[name=targetFormat]:checked").val();
-    
-    getMediaInformation(mediaUri).done(function () {
-        enqueueDownload(mediaUri, targetFormat).done(function () {
-            downloadProgressInterval = setInterval(checkDownloadProgress, 1000);
-        });
-    });
-}
+        this.signalR.on("UseDownloadId", (x) => this.downloadId = x);
+        this.signalR.on("UpdateDownloadStatus", (x) => this.UpdateDownloadStatus(x));
+    }
 
-function enqueueDownload(mediaUri, mediaFormat) {
-    return $.getJSON(
-        'downloader/enqueueDownload',
-        {
-            MediaUri: mediaUri,
-            MediaFormat: mediaFormat
-        },
-        function (result) {
-            downloadId = result.downloadId
+    async EnqueueDownload(mediaUri, mediaFormat) {
+        await this.signalR
+            .invoke("EnqueueDownload", mediaUri, mediaFormat)
+            .catch(
+                function (err) {
+                    return console.error(err);
+                }
+            );
+    }
+
+    UpdateDownloadStatus(result) {
+        $("#downloadStatusText").text(result.downloadStatus);
+
+        if (result.downloadStatus == "Completed") {
+            this.SetProgress(100);
+            this.pageManager.ShowStartPage();
+            $("#downloadStatusText").text("We are doing nothing");
+
+            window.location = 'downloader/downloadFile?downloadId=' + this.downloadId;
         }
-    );
-}
+        else if (result.downloadStatus == "Downloading") {
+            this.SetProgress(result.percent);
+        }
+        else if (result.downloadStatus == "PostProcessing") {
+            this.SetProgress(100);
+        }
+        else if (result.downloadStatus == "Failed") {
+            this.ShowMessage("Sorry, we couldn't download it :(");
+        }
+    }
 
-function getMediaInformation(mediaUri) {
-    showPage("loaderPage");
+    async GetMediaInformation(mediaUri) {
+        this.pageManager.ShowLoaderPage();
 
-    return $.getJSON(
-        'downloader/getMediaInformation',
-        {
-            MediaUri: mediaUri
-        },
-        function (result) {
-            setProgress(0);
+        let result = null;
 
-            showDownloadStatusPage(
-                result.title,
-                result.description,
-                result.webpage_url,
-                result.thumbnail
+        try {
+            result = await $.getJSON(
+                'downloader/getMediaInformation',
+                {
+                    MediaUri: mediaUri
+                }
             );
         }
-    ).fail(function (jqXHR) {
-        showPage("startPage");
+        catch (jqXHR) {
+            this.pageManager.ShowStartPage();
 
-        switch (jqXHR.status) {
-            case 400:
-                showMessage(jqXHR.responseJSON.message);
-                break;
+            switch (jqXHR.status) {
+                case 400:
+                    this.ShowMessage(jqXHR.responseJSON.message);
+                    break;
 
-            case 500:
-                showMessage("Sorry, we have absolutely no idea what happened :(");
-                break;
+                case 500:
+                    this.ShowMessage("Sorry, we have absolutely no idea what happened :(");
+                    break;
+            }
+
+            return false;
         }
-    });
-}
 
-function showPage(pageName) {
-    for (var pageKey in pages) {
-        if (pageKey == pageName)
-            pages[pageKey].show();
-        else
-            pages[pageKey].hide();
+        this.SetProgress(0);
+
+        this.pageManager.ShowStatusPage(
+            result.title,
+            result.description,
+            result.webpage_url,
+            result.thumbnail
+        );
+
+        return true;
+    }
+
+    //utility
+    SetProgress(percentage) {
+        var progressbar = $("#progressbar");
+        progressbar.css("width", percentage + "%");
+        progressbar.attr("aria-valuenow", percentage);
+    }
+
+    //utility
+    ShowMessage(message) {
+        $("#modal-message").text(message);
+        $('#myModal').modal();
     }
 }
 
-function showDownloadStatusPage(videoTitle, videoDescription, videoUrl, videoImage) {
-    $("#video-title").text(videoTitle);
-    $("#video-description").text(videoDescription);
-    $("#video-url").text(videoUrl);
-    $("#video-thumbnail").attr('src', videoImage);
+class PageManager {
+    constructor() {
+        this.pages = [];
 
-    showPage("statusPage");
-} 
+        this.pages["startPage"] = $("#mediaUriInputBox");
+        this.pages["statusPage"] = $("#downloadStatus");
+        this.pages["loaderPage"] = $("#loader");
+    }
 
-function showMessage(message) {
-    $("#modal-message").text(message);
-    $('#myModal').modal();
+    ShowLoaderPage() {
+        this.showPage("loaderPage");
+    }
+
+    ShowStatusPage(videoTitle, videoDescription, videoUrl, videoImage) {
+        $("#video-title").text(videoTitle);
+        $("#video-description").text(videoDescription);
+        $("#video-url").text(videoUrl);
+        $("#video-thumbnail").attr('src', videoImage);
+
+        this.showPage("statusPage");
+    }
+
+    ShowStartPage() {
+        this.showPage("startPage");
+    }
+
+    showPage(pageName) {
+        for (var pageKey in this.pages) {
+            if (pageKey == pageName)
+                this.pages[pageKey].show();
+            else
+                this.pages[pageKey].hide();
+        }
+    }
 }
 
-function setProgress(percentage) {
-    var progressbar = $("#progressbar");
-    progressbar.css("width", percentage + "%");
-    progressbar.attr("aria-valuenow", percentage);
-}
+$(document).ready(function () {
+    var connection = new signalR.HubConnectionBuilder().withUrl("/downloadHub").build();
+    connection.start();
 
-function checkDownloadProgress() {
-    $.getJSON(
-        'downloader/getProgress',
-        {
-            "downloadId": downloadId
-        },
-        function (result) {
-            $("#downloadStatusText").text(result.downloadStatus);
+    vm = new ViewModel(connection, new PageManager());
+});
 
-            if (result.downloadStatus == "Completed") {
-                clearInterval(downloadProgressInterval);
-                setProgress(100);
-                showPage("startPage");
-                $("#downloadStatusText").text("We are doing nothing");
-
-                window.location = 'downloader/downloadFile?downloadId=' + downloadId;
-            }
-            else if (result.downloadStatus == "Downloading") {
-                setProgress(result.percent);
-            }
-            else if (result.downloadStatus == "PostProcessing") {
-                setProgress(100);
-            }
-            else if (result.downloadStatus == "Failed") {
-                clearInterval(downloadProgressInterval);
-                showMessage("Sorry, we couldn't download it :(");
-            }
-        }
-    ).fail(function (jqXHR) {
-        clearInterval(downloadProgressInterval);
-        showPage("startPage");
-
-        if (jqXHR.status == 500) {
-            showMessage("Sorry, we have absolutely no idea what happened :(");
-        }
-        else {
-            showMessage(jqXHR.responseJSON.message);
-        }
-    });
+async function initDownload() {
+    var mediaUri = $("#mediaUri").val();
+    var targetFormat = $("[name=targetFormat]:checked").val();
+    
+    if (await vm.GetMediaInformation(mediaUri)) {
+        await vm.EnqueueDownload(mediaUri, targetFormat);
+    }
 }

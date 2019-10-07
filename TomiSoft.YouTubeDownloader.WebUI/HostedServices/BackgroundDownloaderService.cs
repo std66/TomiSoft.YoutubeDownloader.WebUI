@@ -20,6 +20,7 @@ namespace TomiSoft.YouTubeDownloader.WebUI.HostedServices {
         private readonly IDownloaderServiceConfiguration ServiceConfiguration;
         private readonly ILogger logger;
         private readonly IFileManager fileManager;
+        private readonly IDownloadStatusNotifier notifier;
 
         private readonly ConcurrentQueue<QueuedDownload> QueuedDownloads = new ConcurrentQueue<QueuedDownload>();
         private readonly List<QueuedDownload> RunningDownloads = new List<QueuedDownload>();
@@ -38,11 +39,12 @@ namespace TomiSoft.YouTubeDownloader.WebUI.HostedServices {
         private bool IsUpdating = false;
         private DateTime mLastUpdate = DateTime.UtcNow;
 
-        public BackgroundDownloaderService(IMediaDownloader YoutubeDl, IDownloaderServiceConfiguration serviceConfiguration, ILogger<BackgroundDownloaderService> logger, IFileManager fileManager) {
+        public BackgroundDownloaderService(IMediaDownloader YoutubeDl, IDownloaderServiceConfiguration serviceConfiguration, ILogger<BackgroundDownloaderService> logger, IFileManager fileManager, IDownloadStatusNotifier notifier) {
             this.YoutubeDl = YoutubeDl;
             this.ServiceConfiguration = serviceConfiguration;
             this.logger = logger;
             this.fileManager = fileManager;
+            this.notifier = notifier;
         }
 
         public Guid EnqueueDownload(Uri MediaUri, MediaFormat mediaFormat) {
@@ -131,6 +133,8 @@ namespace TomiSoft.YouTubeDownloader.WebUI.HostedServices {
             if (!QueuedDownloads.IsEmpty && RunningDownloads.Count < ServiceConfiguration.MaximumParallelDownloads) {
                 if (QueuedDownloads.TryDequeue(out QueuedDownload download)) {
                     RunningDownloads.Add(download);
+                    download.DownloadHandler.PercentageChanged += (o, e) => this.notifier.Notify(download.DownloadID, download.DownloadHandler.Status, e);
+                    download.DownloadHandler.DownloadStatusChanged += (o, e) => this.notifier.Notify(download.DownloadID, e, download.DownloadHandler.Percentage);
                     download.DownloadCompleted += this.DownloadCompleted;
                     download.DownloadHandler.Start();
 

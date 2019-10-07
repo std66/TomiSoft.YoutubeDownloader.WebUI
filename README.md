@@ -8,6 +8,7 @@ Requirements
 ------------
   - Microsoft Visual Studio 2017
   - Microsoft .NET Core 2.1
+  - IIS 8.0 or newer with WebSockets enabled
 
 Get started
 -----------

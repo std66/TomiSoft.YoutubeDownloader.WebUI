@@ -10,6 +10,7 @@ using TomiSoft.YouTubeDownloader.WebUI.Core;
 using TomiSoft.YouTubeDownloader.WebUI.Core.Media;
 using TomiSoft.YouTubeDownloader.WebUI.Data;
 using TomiSoft.YouTubeDownloader.WebUI.HostedServices;
+using TomiSoft.YouTubeDownloader.WebUI.Hubs;
 
 namespace TomiSoft.YouTubeDownloader.WebUI {
     public class Startup {
@@ -43,10 +44,12 @@ namespace TomiSoft.YouTubeDownloader.WebUI {
             services.AddSingleton<IMediaDownloader, YoutubeDl>();
             services.AddSingleton<IFileManager, FileManager>();
             services.AddSingleton<ITagInfoWriter, TaglibSharpTagInfoWriter>();
+            services.AddSingleton<IDownloadStatusNotifier, DownloadStatusNotifier>();
             
             services.AddSingleton<IDownloaderService, BackgroundDownloaderService>();
             services.AddHostedService<BackgroundDownloaderHostedServiceAdapter>();
 
+            services.AddSignalR();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
@@ -61,6 +64,9 @@ namespace TomiSoft.YouTubeDownloader.WebUI {
 
             app.UseStaticFiles();
             app.UseCookiePolicy();
+            app.UseSignalR(builder => {
+                builder.MapHub<DownloadHub>("/downloadHub");
+            });
 
             app.UseMvc(routes => {
                 routes.MapRoute(

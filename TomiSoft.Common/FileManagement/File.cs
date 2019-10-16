@@ -3,7 +3,7 @@ using System.IO;
 
 namespace TomiSoft.Common.FileManagement {
     public class File : IFile {
-        private readonly string Path;
+        public string Path { get; }
 
         public bool Exists => System.IO.File.Exists(Path);
 
@@ -47,6 +47,10 @@ namespace TomiSoft.Common.FileManagement {
                 throw new InvalidOperationException($"File cannot be opened for writing because it does not exists: '{this.Path}'");
 
             return new StreamWriter(System.IO.File.OpenWrite(Path));
+        }
+
+        public Stream Open(FileMode mode) {
+            return System.IO.File.Open(this.Path, mode);
         }
 
         public File(string Path) {

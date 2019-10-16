@@ -67,7 +67,7 @@ namespace TomiSoft.YoutubeDownloader {
                 RedirectStandardOutput = true,
                 UseShellExecute = false,
                 FileName = this.ExecutablePath,
-                Arguments = String.Join(' ', this.Arguments),
+                Arguments = String.Join(" ", this.Arguments),
                 WorkingDirectory = Path.GetDirectoryName(this.ExecutablePath)
             };
         }

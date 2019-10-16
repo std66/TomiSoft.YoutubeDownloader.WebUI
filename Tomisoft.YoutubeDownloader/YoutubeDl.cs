@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using TomiSoft.Common.FileManagement;
 using TomiSoft.YoutubeDownloader.Downloading;
 using TomiSoft.YoutubeDownloader.Exceptions;
 using TomiSoft.YoutubeDownloader.Media;

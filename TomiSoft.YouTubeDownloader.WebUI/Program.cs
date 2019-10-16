@@ -1,7 +1,7 @@
-﻿using System;
-using Microsoft.AspNetCore;
+﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using NLog.Web;
+using System;
 
 namespace TomiSoft.YouTubeDownloader.WebUI {
     public class Program {

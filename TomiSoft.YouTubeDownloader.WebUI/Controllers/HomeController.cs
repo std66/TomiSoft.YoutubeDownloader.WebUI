@@ -1,6 +1,5 @@
-﻿using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
-using TomiSoft.YouTubeDownloader.WebUI.HostedServices;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 using TomiSoft.YouTubeDownloader.WebUI.Models;
 
 namespace TomiSoft.YouTubeDownloader.WebUI.Controllers {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Timers;
 
-namespace TomiSoft.YouTubeDownloader.WebUI.Data {
+namespace TomiSoft.YouTubeDownloader.BusinessLogic.DataManagement {
     public class MemoryFilenameDB : IFilenameDatabase {
         private class FilenameRecord {
             public DateTime CreateTime { get; set; }

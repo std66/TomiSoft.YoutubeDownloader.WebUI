@@ -1,23 +1,25 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.IO;
 using System.Net;
-using Microsoft.AspNetCore.Mvc;
+using TomiSoft.Common.FileManagement;
 using TomiSoft.YoutubeDownloader;
+using TomiSoft.YoutubeDownloader.BusinessLogic.BusinessModels;
+using TomiSoft.YoutubeDownloader.BusinessLogic.Services;
 using TomiSoft.YoutubeDownloader.Downloading;
 using TomiSoft.YoutubeDownloader.Media;
+using TomiSoft.YouTubeDownloader.BusinessLogic.DataManagement;
 using TomiSoft.YouTubeDownloader.WebUI.Core;
-using TomiSoft.YouTubeDownloader.WebUI.Data;
-using TomiSoft.YouTubeDownloader.WebUI.HostedServices;
 using TomiSoft.YouTubeDownloader.WebUI.Models;
 
 namespace TomiSoft.YouTubeDownloader.WebUI.Controllers {
     public class DownloaderController : Controller
     {
         private readonly IMediaDownloader youtubeDl;
-        private readonly IDownloaderService downloaderService;
+        private readonly IDownloadManagementService downloaderService;
         private readonly IFilenameDatabase filenameDatabase;
 
-        public DownloaderController(IMediaDownloader youtubeDl, IDownloaderService downloaderService, IFilenameDatabase filenameDatabase) {
+        public DownloaderController(IMediaDownloader youtubeDl, IDownloadManagementService downloaderService, IFilenameDatabase filenameDatabase) {
             this.youtubeDl = youtubeDl;
             this.downloaderService = downloaderService;
             this.filenameDatabase = filenameDatabase;
@@ -31,7 +33,7 @@ namespace TomiSoft.YouTubeDownloader.WebUI.Controllers {
         }
 
         public IActionResult DownloadFile([FromQuery] Guid DownloadId) {
-            IDownload progress;
+            DownloadStatusBM progress;
 
             try {
                 progress = this.downloaderService.GetDownloadStatus(DownloadId);
@@ -44,15 +46,17 @@ namespace TomiSoft.YouTubeDownloader.WebUI.Controllers {
                 return new ErrorResponse(ErrorCodes.DownloadNotCompleted, HttpStatusCode.PreconditionRequired).AsJsonResult();
             }
 
-            Stream s = System.IO.File.OpenRead(progress.Filename);
+            IFile file = this.downloaderService.GetDownloadedFile(DownloadId);
+
+            Stream s = file.Open(FileMode.Open);
             var contentType = "application/octet-stream";
 
             string fileName = this.filenameDatabase.GetFilename(DownloadId);
             if (fileName != null) {
-                fileName += Path.GetExtension(progress.Filename);
+                fileName += Path.GetExtension(file.Path);
             }
             else {
-                fileName = progress.Filename;
+                fileName = file.Path;
             }
 
             return File(s, contentType, fileName);

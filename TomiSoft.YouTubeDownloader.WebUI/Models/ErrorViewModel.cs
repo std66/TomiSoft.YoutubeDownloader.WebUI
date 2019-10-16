@@ -1,5 +1,3 @@
-using System;
-
 namespace TomiSoft.YouTubeDownloader.WebUI.Models {
     public class ErrorViewModel {
         public string RequestId { get; set; }

@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TomiSoft.Common\TomiSoft.Common.csproj" />
+    <ProjectReference Include="..\TomiSoft.YoutubeDownloader.BusinessLogic\TomiSoft.YoutubeDownloader.BusinessLogic.csproj" />
     <ProjectReference Include="..\Tomisoft.YoutubeDownloader\TomiSoft.YoutubeDownloader.csproj" />
   </ItemGroup>
 
@@ -23,6 +24,10 @@
     <Content Update="nlog.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Data\" />
   </ItemGroup>
 
 </Project>

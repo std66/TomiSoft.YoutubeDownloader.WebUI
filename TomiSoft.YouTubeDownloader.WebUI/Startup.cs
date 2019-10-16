@@ -6,9 +6,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TomiSoft.Common.FileManagement;
 using TomiSoft.YoutubeDownloader;
+using TomiSoft.YoutubeDownloader.BusinessLogic;
+using TomiSoft.YoutubeDownloader.BusinessLogic.Configuration;
+using TomiSoft.YoutubeDownloader.BusinessLogic.Services;
 using TomiSoft.YouTubeDownloader.WebUI.Core;
 using TomiSoft.YouTubeDownloader.WebUI.Core.Media;
-using TomiSoft.YouTubeDownloader.WebUI.Data;
 using TomiSoft.YouTubeDownloader.WebUI.HostedServices;
 using TomiSoft.YouTubeDownloader.WebUI.Hubs;
 
@@ -36,18 +38,23 @@ namespace TomiSoft.YouTubeDownloader.WebUI {
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
+
+            services
+                .AddYoutubeDownloaderCore();
             
-            services.AddSingleton<IYoutubeDlConfiguration>(YoutubeConfiguration);
-            services.AddSingleton<IDownloaderServiceConfiguration>(YoutubeConfiguration);
-            services.AddSingleton<IFilenameDatabase, MemoryFilenameDB>();
-            services.AddSingleton<IProcessFactory, ProcessFactory>();
-            services.AddSingleton<IMediaDownloader, YoutubeDl>();
-            services.AddSingleton<IFileManager, FileManager>();
-            services.AddSingleton<ITagInfoWriter, TaglibSharpTagInfoWriter>();
-            services.AddSingleton<IDownloadStatusNotifier, DownloadStatusNotifier>();
-            
-            services.AddSingleton<IDownloaderService, BackgroundDownloaderService>();
-            services.AddHostedService<BackgroundDownloaderHostedServiceAdapter>();
+            services
+                .AddSingleton<IYoutubeDlConfiguration>(YoutubeConfiguration)
+                .AddSingleton<IDownloaderServiceConfiguration>(YoutubeConfiguration)
+                .AddSingleton<IProcessFactory, ProcessFactory>()
+                .AddSingleton<IMediaDownloader, YoutubeDl>()
+                .AddSingleton<IFileManager, FileManager>()
+                .AddSingleton<ITagInfoWriter, TaglibSharpTagInfoWriter>()
+                .AddSingleton<IDownloadStatusNotifier, DownloadStatusNotifier>();
+
+            services
+                .AddHostedService<CleanupHostedService>()
+                .AddHostedService<MaintenanceHostedService>()
+                .AddHostedService<BackgroundDownloaderService>();
 
             services.AddSignalR();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);

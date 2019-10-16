@@ -1,4 +1,4 @@
-﻿using TomiSoft.YouTubeDownloader.WebUI.Core;
+﻿using TomiSoft.YoutubeDownloader.BusinessLogic.Configuration;
 
 namespace TomiSoft.YoutubeDownloader.WebUI.Tests.Mocks {
     class DownloaderServiceConfiguration : IDownloaderServiceConfiguration {

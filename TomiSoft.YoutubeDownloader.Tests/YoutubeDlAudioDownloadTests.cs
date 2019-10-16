@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using TomiSoft.YoutubeDownloader;
 using TomiSoft.YoutubeDownloader.Downloading;
 using TomiSoft.YoutubeDownloader.Media;
 using TomiSoft.YoutubeDownloader.Tests.Samples;

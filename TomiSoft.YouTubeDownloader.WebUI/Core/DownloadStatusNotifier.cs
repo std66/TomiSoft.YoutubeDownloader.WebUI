@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using System;
+using TomiSoft.YoutubeDownloader.BusinessLogic.Services;
 using TomiSoft.YoutubeDownloader.Downloading;
 using TomiSoft.YouTubeDownloader.WebUI.Hubs;
 

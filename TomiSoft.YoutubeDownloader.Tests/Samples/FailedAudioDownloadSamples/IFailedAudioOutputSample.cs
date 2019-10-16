@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using TomiSoft.YoutubeDownloader.Downloading;
 using TomiSoft.YoutubeDownloader.Tests.YoutubeDlMocks;
 
 namespace TomiSoft.YoutubeDownloader.Tests.Samples.FailedAudioDownloadSamples {

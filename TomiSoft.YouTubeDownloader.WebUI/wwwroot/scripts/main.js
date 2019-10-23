@@ -10,6 +10,19 @@ class ViewModel {
         this.signalR.on("UpdateDownloadStatus", (x) => this.UpdateDownloadStatus(x));
     }
 
+    isValidURL(string) {
+        var res = string.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
+        return (res !== null)
+    };
+
+    InitializeInputBox(clipboardText) {
+        if (this.isValidURL(clipboardText))
+            $("#mediaUri").val(clipboardText);
+
+        $("#mediaUri").focus();
+        $("#mediaUri").select();
+    }
+
     async EnqueueDownload(mediaUri, mediaFormat) {
         await this.signalR
             .invoke("EnqueueDownload", mediaUri, mediaFormat)
@@ -132,11 +145,13 @@ class PageManager {
     }
 }
 
-$(document).ready(function () {
+$(document).ready(async function () {
     var connection = new signalR.HubConnectionBuilder().withUrl("/downloadHub").build();
     connection.start();
 
     vm = new ViewModel(connection, new PageManager());
+    let clipboardText = await navigator.clipboard.readText();
+    vm.InitializeInputBox(clipboardText);
 });
 
 async function initDownload() {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using TomiSoft.Common.SystemProcess;
 using TomiSoft.YoutubeDownloader.Downloading;
 using TomiSoft.YoutubeDownloader.Exceptions;
 using TomiSoft.YoutubeDownloader.Media;
@@ -34,7 +35,7 @@ namespace TomiSoft.YoutubeDownloader {
                     return MediaInformationFactory.Create(StdOut);
                 }
 
-                throw new MediaInformationExtractException(p, MediaUri.ToString());
+                throw new MediaInformationExtractException(p, MediaUri);
             }
         }
 

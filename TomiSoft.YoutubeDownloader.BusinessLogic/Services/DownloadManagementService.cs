@@ -58,6 +58,10 @@ namespace TomiSoft.YoutubeDownloader.BusinessLogic.Services {
 
                 if (e == DownloadState.Completed)
                     EventHandler_DownloadCompleted(download);
+                else if (e == DownloadState.Failed) {
+                    string errorOutput = download.DownloadHandler.ErrorMessage.Replace("\r", "\\r").Replace("\n", "\\n");
+                    logger.LogError($"Error occurred during download: CommandLine='{download.DownloadHandler.CommandLine}' StdErr='{errorOutput}'");
+                }
             };
             download.DownloadHandler.Start();
 

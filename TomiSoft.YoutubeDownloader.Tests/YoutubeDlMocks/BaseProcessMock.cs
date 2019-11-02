@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using TomiSoft.Common.SystemProcess;
 
 namespace TomiSoft.YoutubeDownloader.Tests.YoutubeDlMocks {
     abstract class BaseProcessMock : IProcess, IProcessFactory {
@@ -25,6 +26,8 @@ namespace TomiSoft.YoutubeDownloader.Tests.YoutubeDlMocks {
         public IReadOnlyList<string> StandardOutputLines => this.stdOut;
         public IReadOnlyList<string> StandardErrorLines => this.stdErr;
         public bool ExitedSuccessfully => ExitCode == 0;
+
+        public string CommandLine => string.Empty;
 
         protected abstract bool CheckCmdLineArgs(IEnumerable<string> args);
         protected abstract int Main(string[] args);

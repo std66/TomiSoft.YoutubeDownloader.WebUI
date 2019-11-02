@@ -1,20 +1,23 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using TomiSoft.Common.SystemProcess;
 
 namespace TomiSoft.YoutubeDownloader.Downloading {
     public class DownloadProgress : IDownload {
         private DownloadState downloadState = DownloadState.WaitingForStart;
-        private readonly IProcess DownloaderProcess;
+        private readonly ProcessOutputDecorator DownloaderProcess;
         private double percentage;
         private bool Disposed = false;
         private readonly Guid FilenameGuid;
         private readonly string TargetPath;
 
-        private static readonly Regex DownloadPercentRegex = new Regex(@"^\[download\]\s+(?<percent>\d+\.\d+)%");
+        private const string DownloadStatusRegex = @"^\[download\]\s+(?<percent>\d+\.\d+)%";
+        private const string PostProcessStatusRegex = @"^\[ffmpeg\]";
 
         public DownloadState Status {
             get {
@@ -50,14 +53,19 @@ namespace TomiSoft.YoutubeDownloader.Downloading {
             }
         }
 
+        public string ErrorMessage => this.DownloaderProcess.GetErrorAsString();
+        public string CommandLine => this.DownloaderProcess.CommandLine;
+
         public event EventHandler<DownloadState> DownloadStatusChanged;
         public event EventHandler<double> PercentageChanged;
 
         internal DownloadProgress(IProcess DownloaderProcess, Guid FilenameGuid, string TargetDirectory) {
-            this.DownloaderProcess = DownloaderProcess;
-            this.DownloaderProcess.OutputDataReceived += this.OutputDataReceived;
+            this.DownloaderProcess = new ProcessOutputDecorator(DownloaderProcess);
             this.DownloaderProcess.ErrorDataReceived += this.ErrorDataReceived;
             this.DownloaderProcess.Exited += this.Exited;
+
+            this.DownloaderProcess.RegisterStdOutLineProcessor(DownloadStatusRegex, PercentStatusReceived);
+            this.DownloaderProcess.RegisterStdOutLineProcessor(PostProcessStatusRegex, PostProcessStatusReceived);
             
             this.FilenameGuid = FilenameGuid;
             this.TargetPath = TargetDirectory;
@@ -65,7 +73,6 @@ namespace TomiSoft.YoutubeDownloader.Downloading {
         
         public void Dispose() {
             if (!Disposed) {
-                this.DownloaderProcess.OutputDataReceived -= this.OutputDataReceived;
                 this.DownloaderProcess.Exited -= this.Exited;
                 this.DownloaderProcess.ErrorDataReceived -= this.ErrorDataReceived;
 
@@ -82,18 +89,13 @@ namespace TomiSoft.YoutubeDownloader.Downloading {
             }
         }
 
-        private void OutputDataReceived(object sender, DataReceivedEventArgs e) {
-            if (e.Data == null)
-                return;
+        private void PercentStatusReceived(IReadOnlyDictionary<string, string> args) {
+            this.Status = DownloadState.Downloading;
+            this.Percentage = Convert.ToDouble(args["percent"], CultureInfo.InvariantCulture);
+        }
 
-            Match m = DownloadPercentRegex.Match(e.Data);
-            if (m.Success) {
-                this.Status = DownloadState.Downloading;
-                this.Percentage = Convert.ToDouble(m.Groups["percent"].Value, CultureInfo.InvariantCulture);
-            }
-            else if (e.Data.StartsWith("[ffmpeg]")) {
-                this.Status = DownloadState.PostProcessing;
-            }
+        private void PostProcessStatusReceived(IReadOnlyDictionary<string, string> args) {
+            this.Status = DownloadState.PostProcessing;
         }
 
         private void ErrorDataReceived(object sender, DataReceivedEventArgs e) {

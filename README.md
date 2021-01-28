@@ -10,8 +10,21 @@ Requirements
   - Microsoft .NET Core 2.1
   - IIS 8.0 or newer with WebSockets enabled
 
-Get started
------------
+Run in Docker
+-------------
+The easiest way to get started is to use my Docker image. It is preconfigured and it is immediately ready to use.
+https://hub.docker.com/r/std66/tomisoft-youtubedownloader-webui
+
+```
+docker run -d -p 28465:80 std66/tomisoft-youtubedownloader-webui
+```
+
+Running in Kubernetes
+---------------------
+It will be available in the future. Since the application is heavily stateful, it needs some more refactoring work to be done to fully utilitize the benefits of Kubernetes.
+
+Manual deploy to IIS
+--------------------
   * Download the executable youtube-dl from https://rg3.github.io/youtube-dl/
   * Download ffmpeg, ffprobe from https://www.ffmpeg.org/download.html and extract them next to the youtube-dl executable.
   * Add IUSR read+execute rights to the folder that contains youtube-dl.

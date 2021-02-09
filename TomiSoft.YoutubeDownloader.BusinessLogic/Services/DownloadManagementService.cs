@@ -8,7 +8,8 @@ using TomiSoft.YoutubeDownloader.BusinessLogic.Configuration;
 using TomiSoft.YoutubeDownloader.Downloading;
 using TomiSoft.YouTubeDownloader.BusinessLogic.BusinessModels;
 
-namespace TomiSoft.YoutubeDownloader.BusinessLogic.Services {
+namespace TomiSoft.YoutubeDownloader.BusinessLogic.Services
+{
     public class DownloadManagementService : IDownloadManagementService {
         private readonly List<QueuedDownloadBM> runningDownloads = new List<QueuedDownloadBM>();
         private readonly List<CompletedQueuedDownloadBM> completedDownloads = new List<CompletedQueuedDownloadBM>();
@@ -48,7 +49,7 @@ namespace TomiSoft.YoutubeDownloader.BusinessLogic.Services {
         public void StartDownload(DownloadRequestBM request) {
             QueuedDownloadBM download = new QueuedDownloadBM(
                 downloadId: request.DownloadId,
-                downloadProgress: this.youtubeDl.PrepareDownload(request.MediaUri, request.Format)
+                downloadProgress: this.youtubeDl.PrepareDownload(request.MediaUri, request.Format, serviceConfig.DownloadPath)
             );
 
             runningDownloads.Add(download);

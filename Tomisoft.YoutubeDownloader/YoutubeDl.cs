@@ -5,7 +5,8 @@ using TomiSoft.YoutubeDownloader.Downloading;
 using TomiSoft.YoutubeDownloader.Exceptions;
 using TomiSoft.YoutubeDownloader.Media;
 
-namespace TomiSoft.YoutubeDownloader {
+namespace TomiSoft.YoutubeDownloader
+{
     public class YoutubeDl : IMediaDownloader {
         private readonly IProcessFactory ProcessFactory;
 
@@ -39,14 +40,14 @@ namespace TomiSoft.YoutubeDownloader {
             }
         }
 
-        public IDownload PrepareDownload(Uri MediaUri, MediaFormat MediaFormat) {
-            IProcess process = null;
-
+        public IDownload PrepareDownload(Uri MediaUri, MediaFormat MediaFormat, string downloadDirectory) {
             Guid filenameGuid = Guid.NewGuid();
-            string targetDirectory = Path.GetTempPath();
+            string targetDirectory = downloadDirectory;
             string TargetFilename = Path.Combine(targetDirectory, $"{filenameGuid}.%(ext)s");
 
-            switch (MediaFormat) {
+            IProcess process;
+            switch (MediaFormat)
+            {
                 case MediaFormat.MP3Audio:
                     process = this.ProcessFactory.Create("--newline", "--extract-audio", "--audio-format", "mp3", "-o", TargetFilename, MediaUri.ToString());
                     break;
@@ -58,7 +59,7 @@ namespace TomiSoft.YoutubeDownloader {
                 default:
                     throw new NotSupportedException($"The requested media format ({MediaFormat}) is not supported.");
             }
-            
+
             return new DownloadProgress(process, filenameGuid, targetDirectory);
         }
 

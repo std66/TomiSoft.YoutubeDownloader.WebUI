@@ -9,7 +9,8 @@ using TomiSoft.YoutubeDownloader.Tests.Samples.FailedAudioDownloadSamples;
 using TomiSoft.YoutubeDownloader.Tests.Samples.SuccessfulAudioDownloadSamples;
 using TomiSoft.YoutubeDownloader.Tests.YoutubeDlMocks;
 
-namespace TomiSoft.YoutubeDownloader.Tests {
+namespace TomiSoft.YoutubeDownloader.Tests
+{
     [TestClass]
     public class YoutubeDlAudioDownloadTests {
         [TestMethod]
@@ -34,14 +35,16 @@ namespace TomiSoft.YoutubeDownloader.Tests {
         }
 
         private void PerformTest(IAudioDownloadOutputSample sample) {
-            MockForAudioDownloadTest processMock = this.CreateProcessFactory(sample);
+            const string DownloadDirectory = "fakepath";
+
+            MockForAudioDownloadTest processMock = this.CreateProcessFactory(sample, DownloadDirectory);
 
             YoutubeDl downloader = new YoutubeDl(processMock);
 
             Dictionary<double, bool> ExpectedPercentsToBeReported = new Dictionary<double, bool>(sample.ExpectedPercents.Distinct().Select(x => new KeyValuePair<double, bool>(x, false)));
             Dictionary<DownloadState, bool> ExpectedStatusesToBeReported = new Dictionary<DownloadState, bool>(sample.ExpectedDownloadStatuses.Distinct().Select(x => new KeyValuePair<DownloadState, bool>(x, false)));
-            
-            using (IDownload progress = downloader.PrepareDownload(new Uri(sample.MediaUri), MediaFormat.MP3Audio)) {
+
+            using (IDownload progress = downloader.PrepareDownload(new Uri(sample.MediaUri), MediaFormat.MP3Audio, DownloadDirectory)) {
                 RunDownload(processMock, ExpectedPercentsToBeReported, ExpectedStatusesToBeReported, progress);
             }
             
@@ -76,12 +79,12 @@ namespace TomiSoft.YoutubeDownloader.Tests {
             Assert.IsTrue(processMock.ParametersPassedCorrectly, "Command-line arguments were passed incorrectly to youtube-dl.");
         }
 
-        private MockForAudioDownloadTest CreateProcessFactory(IAudioDownloadOutputSample sample) {
+        private MockForAudioDownloadTest CreateProcessFactory(IAudioDownloadOutputSample sample, string downloadPath) {
             if (sample is ISuccessfulAudioOutputSample successfulSample) {
-                return new MockForAudioDownloadTest(successfulSample.GetStdOut(), 0);
+                return new MockForAudioDownloadTest(successfulSample.GetStdOut(), 0, downloadPath);
             }
             else if (sample is IFailedAudioOutputSample failedSample) {
-                return new MockForAudioDownloadTest(failedSample.Output, failedSample.ExitCode);
+                return new MockForAudioDownloadTest(failedSample.Output, failedSample.ExitCode, downloadPath);
             }
 
             throw new NotSupportedException($"{sample.GetType().FullName} is not supported.");

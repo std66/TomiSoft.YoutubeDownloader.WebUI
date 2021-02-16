@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using TomiSoft.Common.FileManagement;
 using TomiSoft.YoutubeDownloader;
 using TomiSoft.YoutubeDownloader.BusinessLogic;
@@ -14,7 +14,8 @@ using TomiSoft.YouTubeDownloader.WebUI.Core.Media;
 using TomiSoft.YouTubeDownloader.WebUI.HostedServices;
 using TomiSoft.YouTubeDownloader.WebUI.Hubs;
 
-namespace TomiSoft.YouTubeDownloader.WebUI {
+namespace TomiSoft.YouTubeDownloader.WebUI
+{
     public class Startup {
         public Startup(IConfiguration configuration) {
             Configuration = configuration;
@@ -57,11 +58,11 @@ namespace TomiSoft.YouTubeDownloader.WebUI {
                 .AddHostedService<BackgroundDownloaderService>();
 
             services.AddSignalR();
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc(options => options.EnableEndpointRouting = false);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env) {
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
             if (env.IsDevelopment()) {
                 app.UseDeveloperExceptionPage();
             }
@@ -71,7 +72,9 @@ namespace TomiSoft.YouTubeDownloader.WebUI {
 
             app.UseStaticFiles();
             app.UseCookiePolicy();
-            app.UseSignalR(builder => {
+
+            app.UseRouting();
+            app.UseEndpoints(builder => {
                 builder.MapHub<DownloadHub>("/downloadHub");
             });
 

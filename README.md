@@ -6,8 +6,8 @@ A simple WebUI for youtube-dl.
 
 Requirements
 ------------
-  - Microsoft Visual Studio 2017
-  - Microsoft .NET Core 2.1
+  - Microsoft Visual Studio 2019
+  - Microsoft .NET 5.0
   - IIS 8.0 or newer with WebSockets enabled
 
 Run in Docker

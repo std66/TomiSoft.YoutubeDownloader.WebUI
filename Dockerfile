@@ -1,13 +1,13 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-FROM mcr.microsoft.com/dotnet/core/aspnet:2.1-stretch-slim AS base
+FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
 WORKDIR /app
 EXPOSE 80
-EXPOSE 443
 
-FROM mcr.microsoft.com/dotnet/core/sdk:2.1-stretch AS build
+FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
 COPY ["TomiSoft.YouTubeDownloader.WebUI/TomiSoft.YouTubeDownloader.WebUI.csproj", "TomiSoft.YouTubeDownloader.WebUI/"]
+COPY ["TomiSoft.YoutubeDownloader.BusinessLogic/TomiSoft.YoutubeDownloader.BusinessLogic.csproj", "TomiSoft.YoutubeDownloader.BusinessLogic/"]
 COPY ["TomiSoft.Common/TomiSoft.Common.csproj", "TomiSoft.Common/"]
 COPY ["Tomisoft.YoutubeDownloader/TomiSoft.YoutubeDownloader.csproj", "Tomisoft.YoutubeDownloader/"]
 RUN dotnet restore "TomiSoft.YouTubeDownloader.WebUI/TomiSoft.YouTubeDownloader.WebUI.csproj"
@@ -29,7 +29,7 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 RUN apt-get update
-RUN apt-get install ffmpeg python -y
+RUN apt-get install curl ffmpeg python -y
 RUN mkdir /app/youtube-dl
 RUN curl -L https://yt-dl.org/downloads/latest/youtube-dl -o /app/youtube-dl/youtube-dl
 RUN chmod a+rx /app/youtube-dl/youtube-dl

@@ -88,7 +88,7 @@ class ViewModel {
         this.pageManager.ShowStatusPage(
             result.title,
             result.description,
-            result.webpage_url,
+            result.mediaUri,
             result.thumbnail
         );
 

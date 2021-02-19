@@ -32,10 +32,6 @@ namespace TomiSoft.YoutubeDownloader.BusinessLogic.Services
 
         public int ActiveDownloadCount => runningDownloads.Count;
 
-        public bool MaximumNumberOfConcurrentDownloadsReached {
-            get => runningDownloads.Count >= serviceConfig.MaximumParallelDownloads;
-        }
-
         private void EventHandler_DownloadCompleted(QueuedDownloadBM download) {
             CompletedQueuedDownloadBM completedDownload = new CompletedQueuedDownloadBM(download.DownloadID, download.DownloadHandler, DateTime.UtcNow);
 

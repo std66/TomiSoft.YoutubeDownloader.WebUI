@@ -6,7 +6,8 @@ using TomiSoft.Common.Hosting;
 using TomiSoft.YoutubeDownloader.BusinessLogic.Services;
 using TomiSoft.YouTubeDownloader.BusinessLogic.BusinessModels;
 
-namespace TomiSoft.YouTubeDownloader.WebUI.HostedServices {
+namespace TomiSoft.YouTubeDownloader.WebUI.HostedServices
+{
     public class BackgroundDownloaderService : BackgroundService {
         private readonly ILogger<BackgroundDownloaderService> logger;
         private readonly IDownloadManagementService downloadManager;
@@ -34,7 +35,7 @@ namespace TomiSoft.YouTubeDownloader.WebUI.HostedServices {
         private async Task StartNewDownloadsFromQueueAsync(CancellationToken cancellationToken) {
             await this.requestQueue.WaitForAvailableItemAsync(cancellationToken);
 
-            if (!downloadManager.MaximumNumberOfConcurrentDownloadsReached && !maintenanceService.IsMaintenanceRunning) {
+            if (!maintenanceService.IsMaintenanceRunning) {
                 DownloadRequestBM request = this.requestQueue.Dequeue(cancellationToken);
                 downloadManager.StartDownload(request);
             }

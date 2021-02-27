@@ -1,0 +1,25 @@
+﻿@page "/"
+
+<Row>
+    <Column>
+        <div class="input-group input-group-lg">
+            <input type="text" id="mediaUri" class="form-control" placeholder="Paste video link here" aria-label="Paste video link here" aria-describedby="button-addon2">
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="button" id="button-addon2" onclick="initDownload()">Download</button>
+            </div>
+        </div>
+    </Column>
+</Row>
+
+<Row>
+    <Column>
+        <div class="btn-group btn-group-toggle mt-3" data-toggle="buttons">
+            <label class="btn btn-outline-info">
+                <input type="radio" name="targetFormat" id="option1" autocomplete="off" value="video"> Video
+            </label>
+            <label class="btn btn-outline-info active">
+                <input type="radio" name="targetFormat" id="option2" autocomplete="off" value="mp3audio" checked> MP3
+            </label>
+        </div>
+    </Column>
+</Row>

@@ -14,8 +14,7 @@ using TomiSoft.YouTubeDownloader.WebUI.Core.Media;
 using TomiSoft.YouTubeDownloader.WebUI.HostedServices;
 using TomiSoft.YouTubeDownloader.WebUI.Hubs;
 
-namespace TomiSoft.YouTubeDownloader.WebUI
-{
+namespace TomiSoft.YouTubeDownloader.WebUI {
     public class Startup {
         public Startup(IConfiguration configuration) {
             Configuration = configuration;
@@ -65,17 +64,20 @@ namespace TomiSoft.YouTubeDownloader.WebUI
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
             if (env.IsDevelopment()) {
                 app.UseDeveloperExceptionPage();
+                app.UseWebAssemblyDebugging();
             }
             else {
                 app.UseExceptionHandler("/Home/Error");
             }
 
+            app.UseBlazorFrameworkFiles();
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
             app.UseRouting();
             app.UseEndpoints(builder => {
                 builder.MapHub<DownloadHub>("/downloadHub");
+                builder.MapFallbackToFile("index.html");
             });
 
             app.UseMvc(routes => {

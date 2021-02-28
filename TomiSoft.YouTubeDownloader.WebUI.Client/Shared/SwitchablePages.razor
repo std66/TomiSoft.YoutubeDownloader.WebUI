@@ -1,0 +1,25 @@
+﻿<CascadingValue Value="this">
+    @ChildContent
+</CascadingValue>
+
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    public Page ActivePage { get; set; }
+
+    private Dictionary<string, Page> pages = new Dictionary<string, Page>();
+
+    public void AddPage(Page p) {
+        pages.Add(p.ID, p);
+        if (pages.Count == 1)
+            ActivePage = p;
+
+        StateHasChanged();
+    }
+
+    public void ActivatePage(string ID) {
+        ActivePage = pages[ID];
+        StateHasChanged();
+    }
+}

@@ -1,0 +1,22 @@
+﻿@if (Parent.ActivePage == this)
+    @ChildContent
+
+@code {
+    [Parameter]
+    public string ID { get; set; }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [CascadingParameter]
+    private SwitchablePages Parent { get; set; }
+
+    protected override void OnInitialized() {
+        if (Parent == null)
+            throw new ArgumentNullException(nameof(Parent), $"Page must be a child element of {nameof(SwitchablePages)}");
+
+        Parent.AddPage(this);
+
+        base.OnInitialized();
+    }
+}

@@ -1,25 +1,58 @@
 ﻿@page "/"
 
-<Row>
-    <Column>
-        <Addons>
-            <Addon AddonType="AddonType.Body">
-                <TextEdit Placeholder="Paste video link here" />
-            </Addon>
-            <Addon AddonType="AddonType.End">
-                <Button Color="Color.Primary">Download</Button>
-            </Addon>
-        </Addons>
-    </Column>
-</Row>
+<SwitchablePages @ref="PageContainer">
+    <Page ID="Index">
+        <Row>
+            <Column>
+                <Addons>
+                    <Addon AddonType="AddonType.Body">
+                        <TextEdit Placeholder="Paste video link here" @bind-Text="Url" />
+                    </Addon>
+                    <Addon AddonType="AddonType.End">
+                        <Button Color="Color.Primary" Clicked="@BeginDownload">Download</Button>
+                    </Addon>
+                </Addons>
+            </Column>
+        </Row>
 
-<RowSpacing SizeInPx="15" />
+        <RowSpacing SizeInPx="15" />
 
-<Row>
-    <Column>
-        <RadioGroup TValue="string" Name="targetFormat" Buttons="true" CheckedValue="@("mp3audio")">
-            <Radio TValue="string" Value="@("video")">Video</Radio>
-            <Radio TValue="string" Value="@("mp3audio")">MP3</Radio>
-        </RadioGroup>
-    </Column>
-</Row>
+        <Row>
+            <Column>
+                <RadioGroup TValue="string" Name="targetFormat" Buttons="true" CheckedValue="@("mp3audio")">
+                    <Radio TValue="string" Value="@("video")">Video</Radio>
+                    <Radio TValue="string" Value="@("mp3audio")">MP3</Radio>
+                </RadioGroup>
+            </Column>
+        </Row>
+    </Page>
+
+    <Page ID="Loader">
+        <div class="text-center">
+            <Row>
+                <Column>
+                    <h1>
+                        <Icon Name="Blazorise.Icons.FontAwesome.FontAwesomeIcons.SyncAlt" Class="@("fa-spin")" />
+                    </h1>
+                </Column>
+            </Row>
+
+            <Row>
+                <Column>
+                    <h3>Getting things ready...</h3>
+                </Column>
+            </Row>
+        </div>
+    </Page>
+</SwitchablePages>
+
+@code {
+    private string Url { get; set; }
+
+    public SwitchablePages PageContainer { get; set; }
+
+    public Task BeginDownload() {
+        PageContainer.ActivatePage("Loader");
+        return Task.CompletedTask;
+    }
+}

@@ -2,24 +2,24 @@
 
 <Row>
     <Column>
-        <div class="input-group input-group-lg">
-            <input type="text" id="mediaUri" class="form-control" placeholder="Paste video link here" aria-label="Paste video link here" aria-describedby="button-addon2">
-            <div class="input-group-append">
-                <button class="btn btn-outline-secondary" type="button" id="button-addon2" onclick="initDownload()">Download</button>
-            </div>
-        </div>
+        <Addons>
+            <Addon AddonType="AddonType.Body">
+                <TextEdit Placeholder="Paste video link here" />
+            </Addon>
+            <Addon AddonType="AddonType.End">
+                <Button Color="Color.Primary">Download</Button>
+            </Addon>
+        </Addons>
     </Column>
 </Row>
 
+<RowSpacing SizeInPx="15" />
+
 <Row>
     <Column>
-        <div class="btn-group btn-group-toggle mt-3" data-toggle="buttons">
-            <label class="btn btn-outline-info">
-                <input type="radio" name="targetFormat" id="option1" autocomplete="off" value="video"> Video
-            </label>
-            <label class="btn btn-outline-info active">
-                <input type="radio" name="targetFormat" id="option2" autocomplete="off" value="mp3audio" checked> MP3
-            </label>
-        </div>
+        <RadioGroup TValue="string" Name="targetFormat" Buttons="true" CheckedValue="@("mp3audio")">
+            <Radio TValue="string" Value="@("video")">Video</Radio>
+            <Radio TValue="string" Value="@("mp3audio")">MP3</Radio>
+        </RadioGroup>
     </Column>
 </Row>

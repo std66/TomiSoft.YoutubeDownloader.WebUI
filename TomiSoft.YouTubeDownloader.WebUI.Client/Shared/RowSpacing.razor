@@ -1,0 +1,15 @@
+﻿<Row>
+    <Column>
+        <div style="margin-top: @StringValue;"></div>
+    </Column>
+</Row>
+
+@code {
+    /// <summary>
+    /// The spacing between rows in pixels.
+    /// </summary>
+    [Parameter]
+    public int SizeInPx { get; set; }
+
+    private string StringValue => $"{SizeInPx}px";
+}

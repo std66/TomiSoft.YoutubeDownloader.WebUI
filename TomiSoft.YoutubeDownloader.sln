@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TomiSoft.Common.Tests", "To
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TomiSoft.YoutubeDownloader.BusinessLogic", "TomiSoft.YoutubeDownloader.BusinessLogic\TomiSoft.YoutubeDownloader.BusinessLogic.csproj", "{618431AE-664C-4082-9091-D2610B3A3157}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TomiSoft.YouTubeDownloader.WebUI.Client", "TomiSoft.YouTubeDownloader.WebUI.Client\TomiSoft.YouTubeDownloader.WebUI.Client.csproj", "{80B1317D-706E-4AA3-8C8D-DB1758C42BD4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TomiSoft.YouTubeDownloader.WebUI.Client", "TomiSoft.YouTubeDownloader.WebUI.Client\TomiSoft.YouTubeDownloader.WebUI.Client.csproj", "{80B1317D-706E-4AA3-8C8D-DB1758C42BD4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

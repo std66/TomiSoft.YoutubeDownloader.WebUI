@@ -1,58 +1,90 @@
-﻿@page "/"
+﻿@using TomiSoft.YouTubeDownloader.WebUI.Client.Shared
+@page "/"
 
 <SwitchablePages @ref="PageContainer">
     <Page ID="Index">
         <Row>
             <Column>
-                <Addons>
-                    <Addon AddonType="AddonType.Body">
-                        <TextEdit Placeholder="Paste video link here" @bind-Text="Url" />
-                    </Addon>
-                    <Addon AddonType="AddonType.End">
-                        <Button Color="Color.Primary" Clicked="@BeginDownload">Download</Button>
-                    </Addon>
-                </Addons>
-            </Column>
-        </Row>
+                <Paragraph>
+                    <Addons>
+                        <Addon AddonType="AddonType.Body">
+                            <TextEdit Placeholder="Paste video link here" @bind-Text="Url" />
+                        </Addon>
+                        <Addon AddonType="AddonType.End">
+                            <Button Color="Color.Primary" Clicked="@BeginDownload">Download</Button>
+                        </Addon>
+                    </Addons>
+                </Paragraph>
 
-        <RowSpacing SizeInPx="15" />
-
-        <Row>
-            <Column>
-                <RadioGroup TValue="string" Name="targetFormat" Buttons="true" CheckedValue="@("mp3audio")">
-                    <Radio TValue="string" Value="@("video")">Video</Radio>
-                    <Radio TValue="string" Value="@("mp3audio")">MP3</Radio>
-                </RadioGroup>
+                <Paragraph>
+                    <RadioGroup TValue="string" Name="targetFormat" Buttons="true" CheckedValue="@("mp3audio")">
+                        <Radio TValue="string" Value="@("video")">Video</Radio>
+                        <Radio TValue="string" Value="@("mp3audio")">MP3</Radio>
+                    </RadioGroup>
+                </Paragraph>
             </Column>
         </Row>
     </Page>
 
     <Page ID="Loader">
-        <div class="text-center">
-            <Row>
-                <Column>
+        <Row>
+            <Column>
+                <div class="text-center">
                     <h1>
                         <Icon Name="Blazorise.Icons.FontAwesome.FontAwesomeIcons.SyncAlt" Class="@("fa-spin")" />
                     </h1>
-                </Column>
-            </Row>
 
-            <Row>
-                <Column>
                     <h3>Getting things ready...</h3>
-                </Column>
-            </Row>
-        </div>
+                </div>
+            </Column>
+        </Row>
+    </Page>
+
+    <Page ID="DownloadStatus">
+        <Row>
+            <Column>
+                <h1>Just a moment...</h1>
+            </Column>
+        </Row>
+
+        <Row>
+            <Column>
+                <Paragraph>
+                    We are downloading the video from
+                    <Blazorise.Link @bind-To="Url" Target="Target.Blank">
+                        @Url
+                    </Blazorise.Link>
+                </Paragraph>
+
+                <Paragraph>
+                    Current status: <span id="downloadStatusText">We are doing nothing.</span>
+                </Paragraph>
+            </Column>
+        </Row>
+
+        <Row>
+            <Column>
+                <Paragraph>
+                    <Progress>
+                        <ProgressBar Min="0" Max="100" Animated="true" @bind-Value="ProgressValue" />
+                    </Progress>
+                </Paragraph>
+            </Column>
+        </Row>
+        <Row>
+            <Column>
+                <Media>
+                    <MediaLeft>
+                        <Image Source="images/dummy_thumbnail.png" style="max-height: 150px;" />
+                    </MediaLeft>
+                    <MediaBody>
+                        <h5 class="mt-0" id="video-title">There is no video :(</h5>
+                        <p style="max-height: 100px; overflow: hidden;" id="video-description">
+                            There's something gone wrong. You should not be seeing this. Sorry...
+                        </p>
+                    </MediaBody>
+                </Media>
+            </Column>
+        </Row>
     </Page>
 </SwitchablePages>
-
-@code {
-    private string Url { get; set; }
-
-    public SwitchablePages PageContainer { get; set; }
-
-    public Task BeginDownload() {
-        PageContainer.ActivatePage("Loader");
-        return Task.CompletedTask;
-    }
-}

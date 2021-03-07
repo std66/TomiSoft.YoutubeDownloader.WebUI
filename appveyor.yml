@@ -1,0 +1,41 @@
+version: 1.0.{build}
+branches:
+  only:
+  - master
+skip_tags: true
+image: Ubuntu2004
+environment:
+  GIT_ACCESS_TOKEN:
+    secure: psgQ4i2ACc1OdYpL+hAEOy6SFm9eWO0zCGmFT03AmHseQ4YXDhi7tNvMMtUaQxBR
+  DOCKERHUB_ACCESS_TOKEN:
+    secure: RvdX70OomDOz21cGY6HQdEHtHkuR7TUoa+NO+odMMcPoQJ5BpXs40pqOWFm/1hs0
+build_script:
+- ps: >-
+    Push-Location
+
+    Set-Location $Env:APPVEYOR_BUILD_FOLDER
+
+    Write-Host "AppVeyor environment variables:"
+    
+    dir Env: | where -Property Name -Like "APPVEYOR*"
+
+    .\ContinousIntegration\Build\Pre-Build.ps1
+
+    $isMasterBranchBuild = $Env:APPVEYOR_REPO_BRANCH -eq "master"
+    
+    if ($isMasterBranchBuild) {
+    
+        .\ContinousIntegration\Build\Build.ps1
+
+        .\ContinousIntegration\Build\Post-Build.ps1
+    
+    }
+    
+    else {
+    
+        Write-Host "Pull request build completed"
+    
+    }
+
+    Pop-Location
+test: off

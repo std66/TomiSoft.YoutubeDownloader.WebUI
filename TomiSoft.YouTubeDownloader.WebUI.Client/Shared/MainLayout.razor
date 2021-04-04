@@ -1,4 +1,9 @@
-﻿@inherits LayoutComponentBase
+﻿@using Blazorise
+@using TomiSoft.YouTubeDownloader.WebUI.Client.Models
+@using TomiSoft.YouTubeDownloader.WebUI.Client.Services
+
+@inherits LayoutComponentBase
+@inject BackendService Backend
 
 <Layout>
     <LayoutHeader Class="header">
@@ -14,4 +19,16 @@
             <TomiSoft.YouTubeDownloader.WebUI.Client.Pages.Index />
         </Container>
     </LayoutContent>
+    <LayoutFooter>
+        <Blazorise.Link To="https://github.com/std66/TomiSoft.YoutubeDownloader.WebUI">TomiSoft.YoutubeDownloader.WebUI</Blazorise.Link>
+        @versionInfo?.Version.ToString()
+    </LayoutFooter>
 </Layout>
+
+@code  {
+    private AppVersionInfo versionInfo;
+
+    protected override async Task OnInitializedAsync() {
+        versionInfo = await Backend.GetAppVersionAsync();
+    }
+}

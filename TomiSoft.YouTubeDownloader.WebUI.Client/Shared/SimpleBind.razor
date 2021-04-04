@@ -3,4 +3,7 @@
 @code {
     [Parameter]
     public object Value { get; set; }
+
+    [Parameter]
+    public EventCallback<object> ValueChanged { get; set; }
 }

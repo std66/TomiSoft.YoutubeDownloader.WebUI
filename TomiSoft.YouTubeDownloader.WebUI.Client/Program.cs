@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using TomiSoft.YouTubeDownloader.WebUI.Client.Services;
 
 namespace TomiSoft.YouTubeDownloader.WebUI.Client {
     public class Program {
@@ -27,7 +28,8 @@ namespace TomiSoft.YouTubeDownloader.WebUI.Client {
                 .AddFontAwesomeIcons();
 
             builder.Services
-                .AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+                .AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) })
+                .AddScoped<BackendService>();
         }
     }
 }

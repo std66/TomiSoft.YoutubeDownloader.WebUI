@@ -5,8 +5,8 @@ namespace TomiSoft.YoutubeDownloader {
     public class ProcessFactory : IProcessFactory {
         private readonly string ExecutablePath;
 
-        public ProcessFactory(IYoutubeDlConfiguration Configuration) {
-            this.ExecutablePath = Configuration.ExecutablePath;
+        public ProcessFactory(IYoutubeDlConfiguration configuration) {
+            this.ExecutablePath = configuration.ExecutablePath;
         }
 
         public IProcess Create(params string[] args) {

@@ -116,6 +116,7 @@ class PageManager {
         this.pages["startPage"] = $("#mediaUriInputBox");
         this.pages["statusPage"] = $("#downloadStatus");
         this.pages["loaderPage"] = $("#loader");
+        this.pages["fatalSignalRErrorPage"] = $("#fatalSignalRError");
     }
 
     ShowLoaderPage() {
@@ -135,6 +136,10 @@ class PageManager {
         this.showPage("startPage");
     }
 
+    ShowFatalSignalRErrorPage() {
+        this.showPage("fatalSignalRErrorPage");
+    }
+
     showPage(pageName) {
         for (var pageKey in this.pages) {
             if (pageKey == pageName)
@@ -146,10 +151,19 @@ class PageManager {
 }
 
 $(document).ready(async function () {
-    var connection = new signalR.HubConnectionBuilder().withUrl("/downloadHub").build();
-    connection.start();
+    let pageManager = new PageManager();
 
-    vm = new ViewModel(connection, new PageManager());
+    var connection = new signalR.HubConnectionBuilder().withUrl("/downloadHub").build();
+
+    try {
+        await connection.start();
+    }
+    catch (error) {
+        pageManager.ShowFatalSignalRErrorPage();
+        return;
+    }
+
+    vm = new ViewModel(connection, pageManager);
     let clipboardText = await navigator.clipboard.readText();
     vm.InitializeInputBox(clipboardText);
 });

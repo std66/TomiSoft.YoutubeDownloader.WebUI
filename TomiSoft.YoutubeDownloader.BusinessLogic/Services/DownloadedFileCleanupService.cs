@@ -48,7 +48,7 @@ namespace TomiSoft.YoutubeDownloader.BusinessLogic.Services {
         }
 
         private bool IsDeletable(CompletedQueuedDownloadBM x) {
-            return DateTime.UtcNow - x.CompletionTimestampUtc > TimeSpan.FromMilliseconds(this.serviceConfiguration.DeleteFilesAfterMillisecondsElapsed);
+            return DateTime.UtcNow - x.CompletionTimestampUtc > TimeSpan.FromMinutes(this.serviceConfiguration.DeleteFilesAfterMinutesElapsed);
         }
     }
 }

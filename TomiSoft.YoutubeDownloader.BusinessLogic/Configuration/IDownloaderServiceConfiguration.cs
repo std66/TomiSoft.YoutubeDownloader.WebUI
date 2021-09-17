@@ -1,7 +1,6 @@
-﻿namespace TomiSoft.YoutubeDownloader.BusinessLogic.Configuration
-{
+﻿namespace TomiSoft.YoutubeDownloader.BusinessLogic.Configuration {
     public interface IDownloaderServiceConfiguration {
-        int DeleteFilesAfterMillisecondsElapsed { get; }
+        int DeleteFilesAfterMinutesElapsed { get; }
         string DownloadPath { get; }
     }
 }

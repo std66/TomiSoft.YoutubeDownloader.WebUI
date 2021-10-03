@@ -75,6 +75,10 @@ class ViewModel {
                     this.ShowMessage(jqXHR.responseJSON.message);
                     break;
 
+                case 409:
+                    this.ShowMessage(jqXHR.responseJSON.message);
+                    break;
+
                 case 500:
                     this.ShowMessage("Sorry, we have absolutely no idea what happened :(");
                     break;

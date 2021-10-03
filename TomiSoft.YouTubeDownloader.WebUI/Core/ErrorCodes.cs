@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TomiSoft.YouTubeDownloader.WebUI.Core {
+namespace TomiSoft.YouTubeDownloader.WebUI.Core
+{
     public enum ErrorCodes {
         [Display(Name = "Request succeeded")]
         Success = 0,
@@ -21,6 +22,9 @@ namespace TomiSoft.YouTubeDownloader.WebUI.Core {
         InvalidDownloadId = 5,
 
         [Display(Name = "Download is not completed")]
-        DownloadNotCompleted = 6
+        DownloadNotCompleted = 6,
+
+        [Display(Name = "Live streams are not supported")]
+        LiveStreamsAreNotSupported = 7
     }
 }

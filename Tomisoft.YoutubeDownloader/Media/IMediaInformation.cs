@@ -1,4 +1,5 @@
-﻿namespace TomiSoft.YoutubeDownloader.Media {
+﻿namespace TomiSoft.YoutubeDownloader.Media
+{
     public interface IMediaInformation {
         string MediaUri { get; }
         string Title { get; }
@@ -6,5 +7,6 @@
         string VideoId { get; }
         string Thumbnail { get; }
         string Description { get; }
+        bool IsLiveStream { get; }
     }
 }

@@ -12,7 +12,8 @@ using TomiSoft.YouTubeDownloader.BusinessLogic.DataManagement;
 using TomiSoft.YouTubeDownloader.WebUI.Core;
 using TomiSoft.YouTubeDownloader.WebUI.Models;
 
-namespace TomiSoft.YouTubeDownloader.WebUI.Controllers {
+namespace TomiSoft.YouTubeDownloader.WebUI.Controllers
+{
     public class DownloaderController : Controller
     {
         private readonly IMediaDownloader youtubeDl;
@@ -27,6 +28,12 @@ namespace TomiSoft.YouTubeDownloader.WebUI.Controllers {
 
         public IActionResult GetMediaInformation([FromQuery] Uri MediaUri) {
             IMediaInformation info = this.youtubeDl.GetMediaInformation(MediaUri);
+
+            if (info.IsLiveStream)
+            {
+                return new ErrorResponse(ErrorCodes.LiveStreamsAreNotSupported, HttpStatusCode.Conflict).AsJsonResult();
+            }
+
             this.filenameDatabase.AddFilename(MediaUri, FilenameHelper.RemoveNotAllowedChars(info.Title));
 
             return new JsonResult(info);

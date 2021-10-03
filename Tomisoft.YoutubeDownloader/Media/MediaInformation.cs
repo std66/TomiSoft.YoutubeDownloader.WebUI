@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 
-namespace TomiSoft.YoutubeDownloader.Media {
+namespace TomiSoft.YoutubeDownloader.Media
+{
     public class MediaInformation : IMediaInformation {
         [JsonProperty("extractor")]
         internal string Extractor { get; set; }
@@ -22,5 +23,8 @@ namespace TomiSoft.YoutubeDownloader.Media {
 
         [JsonProperty("description")]
         public string Description { get; set; }
+
+        [JsonProperty("is_live")]
+        public bool IsLiveStream { get; set; }
     }
 }

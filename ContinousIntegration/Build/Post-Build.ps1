@@ -1,3 +1,5 @@
+$ErrorActionPreference = "Stop";
+
 Write-Host "=== Post build ==="
 
 Write-Host "Stage: Tag commit in git"

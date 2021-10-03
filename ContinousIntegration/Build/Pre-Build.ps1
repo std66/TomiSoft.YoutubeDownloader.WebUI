@@ -1,3 +1,5 @@
+$ErrorActionPreference = "Stop";
+
 $Version = "1.0.0"
 $GitRepoRoot = (Resolve-Path "../..").Path
 $GitBranch = "master"
@@ -38,10 +40,10 @@ if ($lastexitcode -ne 0) {
 }
 
 Write-Host "Stage: Run unit tests"
+$hasFailingUnitTests = $false
 dotnet test --no-build --no-restore --logger trx
 if ($lastexitcode -ne 0) {
-	Write-Error "Unit test execution completed with errors. Exit code: $lastexitcode"
-	exit 1
+	$hasFailingUnitTests = $true;
 }
 
 Write-Host "Stage: Upload unit test results to AppVeyor"
@@ -53,6 +55,10 @@ if ($Env:APPVEYOR -ne $null) {
 		$webclient.UploadFile("https://ci.appveyor.com/api/testresults/mstest/${env:APPVEYOR_JOB_ID}", $filePath)
 		Remove-Item $filePath
 	}
+}
+
+if ($hasFailingUnitTests) {
+	Write-Error "Unit test execution completed with errors."
 }
 
 Write-Host "=== Pre-build completed ==="

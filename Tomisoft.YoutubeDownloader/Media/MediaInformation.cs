@@ -24,7 +24,7 @@ namespace TomiSoft.YoutubeDownloader.Media
         [JsonProperty("description")]
         public string Description { get; set; }
 
-        [JsonProperty("is_live")]
+        [JsonProperty("is_live", NullValueHandling = NullValueHandling.Ignore)]
         public bool IsLiveStream { get; set; }
     }
 }

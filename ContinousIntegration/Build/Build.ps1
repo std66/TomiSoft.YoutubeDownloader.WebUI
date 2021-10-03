@@ -1,3 +1,5 @@
+$ErrorActionPreference = "Stop";
+
 Write-Host "=== Build ==="
 
 Push-Location

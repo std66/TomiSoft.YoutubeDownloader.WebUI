@@ -25,6 +25,9 @@ namespace TomiSoft.YouTubeDownloader.WebUI.Core
         DownloadNotCompleted = 6,
 
         [Display(Name = "Live streams are not supported")]
-        LiveStreamsAreNotSupported = 7
+        LiveStreamsAreNotSupported = 7,
+
+        [Display(Name = "Downloading private media is not supported")]
+        PrivateMediaIsNotSupported = 8
     }
 }

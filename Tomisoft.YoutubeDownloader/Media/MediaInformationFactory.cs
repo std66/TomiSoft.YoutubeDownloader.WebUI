@@ -18,7 +18,7 @@ namespace TomiSoft.YoutubeDownloader.Media {
         }
 
         private static IMediaInformation CreateYoutubeMediaInformation(string StdOut) {
-            IDictionary<string, object> data = JsonConvert.DeserializeObject<ExpandoObject>(StdOut, new ExpandoObjectConverter()) as IDictionary<string, object>;
+            IDictionary<string, object> data = JsonConvert.DeserializeObject<ExpandoObject>(StdOut, new ExpandoObjectConverter());
 
             bool containsIdentifiedSong =
                 data.ContainsKey("track") && !string.IsNullOrEmpty(data["track"] as string) &&

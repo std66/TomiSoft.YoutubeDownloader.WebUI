@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using TomiSoft.Common.SystemProcess;
 using TomiSoft.YoutubeDownloader.Downloading;
 using TomiSoft.YoutubeDownloader.Exceptions;
@@ -36,8 +37,15 @@ namespace TomiSoft.YoutubeDownloader
                     return MediaInformationFactory.Create(StdOut);
                 }
 
+                TryFindMediaInformationQueryFailureReason(p, MediaUri);
                 throw new MediaInformationExtractException(p, MediaUri);
             }
+        }
+
+        private void TryFindMediaInformationQueryFailureReason(IProcess p, Uri MediaUri)
+        {
+            if (p.StandardErrorLines.Any(x => x == "ERROR: Private video"))
+                throw new PrivateMediaException(p, MediaUri);
         }
 
         public IDownload PrepareDownload(Uri MediaUri, MediaFormat MediaFormat, string downloadDirectory) {

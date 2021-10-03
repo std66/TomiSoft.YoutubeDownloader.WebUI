@@ -7,6 +7,7 @@ using TomiSoft.YoutubeDownloader;
 using TomiSoft.YoutubeDownloader.BusinessLogic.BusinessModels;
 using TomiSoft.YoutubeDownloader.BusinessLogic.Services;
 using TomiSoft.YoutubeDownloader.Downloading;
+using TomiSoft.YoutubeDownloader.Exceptions;
 using TomiSoft.YoutubeDownloader.Media;
 using TomiSoft.YouTubeDownloader.BusinessLogic.DataManagement;
 using TomiSoft.YouTubeDownloader.WebUI.Core;
@@ -27,7 +28,16 @@ namespace TomiSoft.YouTubeDownloader.WebUI.Controllers
         }
 
         public IActionResult GetMediaInformation([FromQuery] Uri MediaUri) {
-            IMediaInformation info = this.youtubeDl.GetMediaInformation(MediaUri);
+            IMediaInformation info;
+
+            try
+            {
+                info = this.youtubeDl.GetMediaInformation(MediaUri);
+            }
+            catch (PrivateMediaException)
+            {
+                return new ErrorResponse(ErrorCodes.PrivateMediaIsNotSupported, HttpStatusCode.Conflict).AsJsonResult();
+            }
 
             if (info.IsLiveStream)
             {

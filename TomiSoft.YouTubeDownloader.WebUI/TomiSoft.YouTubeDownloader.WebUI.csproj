@@ -10,6 +10,7 @@
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
     <PackageReference Include="NLog.Web.AspNetCore" Version="4.7.0" />
+    <PackageReference Include="prometheus-net.AspNetCore" Version="7.0.0" />
     <PackageReference Include="taglib-sharp-netstandard2.0" Version="2.1.0" />
   </ItemGroup>
 
@@ -21,7 +22,7 @@
 
   <ItemGroup>
     <Content Update="nlog.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 

@@ -2,6 +2,19 @@ $ErrorActionPreference = "Stop";
 
 Write-Host "=== Post build ==="
 
+Write-Host "Stage: Publish Docker image"
+
+$version = $Env:APPVEYOR_BUILD_VERSION
+$image = "std66/tomisoft-youtubedownloader-webui"
+
+docker logout
+$Env:DOCKERHUB_ACCESS_TOKEN | docker login --username std66 --password-stdin
+
+docker push "${image}"
+docker push "${image}:${version}"
+
+docker logout
+
 Write-Host "Stage: Tag commit in git"
 
 Push-Location

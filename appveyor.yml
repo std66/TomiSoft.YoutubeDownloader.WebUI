@@ -12,7 +12,7 @@ environment:
 build_script:
 - ps: >-
     Push-Location
-
+    
     Set-Location $Env:APPVEYOR_BUILD_FOLDER
 
     Write-Host "AppVeyor environment variables:"
@@ -20,15 +20,15 @@ build_script:
     dir Env: | where -Property Name -Like "APPVEYOR*"
 
     .\ContinousIntegration\Build\Pre-Build.ps1
+    
+    .\ContinousIntegration\Build\Build.ps1
 
     $isMasterBranchBuild = $Env:APPVEYOR_PULL_REQUEST_NUMBER -eq $null -and $Env:APPVEYOR_REPO_BRANCH -eq "master"
     
     if ($isMasterBranchBuild) {
     
-        .\ContinousIntegration\Build\Build.ps1
-
         .\ContinousIntegration\Build\Post-Build.ps1
-    
+        
     }
     
     else {

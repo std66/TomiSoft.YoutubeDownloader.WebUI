@@ -3,6 +3,7 @@
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 WORKDIR /app
 EXPOSE 80
+EXPOSE 9000
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
@@ -30,6 +31,7 @@ WORKDIR /app
 COPY --from=publish /app/publish .
 RUN apt-get update
 RUN apt-get install curl ffmpeg python -y
+RUN mkdir /app/config
 RUN mkdir /app/youtube-dl
 RUN curl -L https://yt-dl.org/downloads/latest/youtube-dl -o /app/youtube-dl/youtube-dl
 RUN chmod a+rx /app/youtube-dl/youtube-dl

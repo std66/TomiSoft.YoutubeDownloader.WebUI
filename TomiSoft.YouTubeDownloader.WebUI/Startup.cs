@@ -29,7 +29,7 @@ namespace TomiSoft.YouTubeDownloader.WebUI
             MetricsConfiguration = config;
 
             YoutubeConfiguration ytconfig = new YoutubeConfiguration();
-            Configuration.GetSection("YoutubeConfiguration").Bind(config);
+            Configuration.GetSection("YoutubeConfiguration").Bind(ytconfig);
             YoutubeConfiguration = ytconfig;
         }
 

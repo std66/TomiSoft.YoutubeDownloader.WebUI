@@ -66,7 +66,6 @@ namespace TomiSoft.YouTubeDownloader.WebUI.Controllers
             IFile file = this.downloaderService.GetDownloadedFile(DownloadId);
 
             Stream s = file.Open(FileMode.Open);
-            var contentType = "application/octet-stream";
 
             string fileName = this.filenameDatabase.GetFilename(DownloadId);
             if (fileName != null) {
@@ -76,7 +75,7 @@ namespace TomiSoft.YouTubeDownloader.WebUI.Controllers
                 fileName = file.Path;
             }
 
-            return File(s, contentType, fileName);
+            return File(s, "application/octet-stream", fileName);
         }
     }
 }

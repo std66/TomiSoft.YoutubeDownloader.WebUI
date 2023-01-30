@@ -15,6 +15,7 @@ using TomiSoft.YouTubeDownloader.WebUI.Core;
 using TomiSoft.YouTubeDownloader.WebUI.Core.Media;
 using TomiSoft.YouTubeDownloader.WebUI.HostedServices;
 using TomiSoft.YouTubeDownloader.WebUI.Hubs;
+using TomiSoft.YouTubeDownloader.WebUI.Metrics;
 
 namespace TomiSoft.YouTubeDownloader.WebUI
 {
@@ -56,6 +57,20 @@ namespace TomiSoft.YouTubeDownloader.WebUI
                     options.Url = MetricsConfiguration.Uri;
                     options.Port = MetricsConfiguration.Port;
                 });
+
+                services
+                    .AddSingleton<IMediaDownloadMetrics, MediaDownloadMetrics>()
+                    .AddSingleton<YoutubeDl>()
+                    .AddSingleton<IMediaDownloader>(provider => {
+                        return new MediaDownloaderMetricsDecorator(
+                            downloader: provider.GetRequiredService<YoutubeDl>(),
+                            metrics: provider.GetRequiredService<IMediaDownloadMetrics>()
+                        );
+                    });
+            }
+            else {
+                services
+                    .AddSingleton<IMediaDownloader, YoutubeDl>();
             }
 
             services
@@ -65,7 +80,6 @@ namespace TomiSoft.YouTubeDownloader.WebUI
                 .AddSingleton<IYoutubeDlConfiguration>(YoutubeConfiguration)
                 .AddSingleton<IDownloaderServiceConfiguration>(YoutubeConfiguration)
                 .AddSingleton<IProcessFactory, ProcessFactory>()
-                .AddSingleton<IMediaDownloader, YoutubeDl>()
                 .AddSingleton<IFileManager, FileManager>()
                 .AddSingleton<ITagInfoWriter, TaglibSharpTagInfoWriter>()
                 .AddSingleton<IDownloadStatusNotifier, DownloadStatusNotifier>();

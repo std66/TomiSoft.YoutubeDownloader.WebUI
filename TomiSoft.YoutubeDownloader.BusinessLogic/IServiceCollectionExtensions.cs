@@ -16,7 +16,6 @@ namespace TomiSoft.YoutubeDownloader.BusinessLogic {
         public static IServiceCollection AddBusinessLogicLayer(this IServiceCollection services) {
             return services
                 .AddSingleton<IQueueService<DownloadRequestBM>, QueueService<DownloadRequestBM>>()
-                .AddSingleton<IDownloadedFileCleanupService, DownloadedFileCleanupService>()
                 .AddSingleton<IMaintenanceService, MaintenanceService>()
                 .AddSingleton<IDownloadManagementService, DownloadManagementService>();
         }

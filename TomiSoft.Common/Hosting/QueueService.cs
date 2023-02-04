@@ -19,11 +19,8 @@ namespace TomiSoft.Common.Hosting {
             return Task.CompletedTask;
         }
 
-        public T Dequeue(CancellationToken cancellationToken) {
-            if (this.queue.TryDequeue(out T result))
-                return result;
-
-            return default(T);
+        public bool TryDequeue(out T result) {
+            return this.queue.TryDequeue(out result);
         }
     }
 }

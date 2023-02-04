@@ -1,8 +1,9 @@
-﻿using TomiSoft.YoutubeDownloader.BusinessLogic.BusinessModels;
+﻿using System;
+using TomiSoft.YoutubeDownloader.Downloading;
 
 namespace TomiSoft.YoutubeDownloader.BusinessLogic.Services {
     public interface IDownloadedFileCleanupService {
-        void MarkToCleanup(CompletedQueuedDownloadBM download);
+        void MarkToCleanup(IDownload download);
         void RunCleanup();
     }
 }

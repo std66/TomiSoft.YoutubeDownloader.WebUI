@@ -19,15 +19,13 @@ namespace TomiSoft.YoutubeDownloader.BusinessLogic.Services
         private readonly IMediaDownloader youtubeDl;
         private readonly IDownloaderServiceConfiguration serviceConfig;
         private readonly IFileManager fileManager;
-        private readonly IDownloadedFileCleanupService cleanupService;
 
-        public DownloadManagementService(ILogger<DownloadManagementService> logger, IDownloadStatusNotifier notifier, IMediaDownloader youtubeDl, IDownloaderServiceConfiguration serviceConfig, IFileManager fileManager, IDownloadedFileCleanupService cleanupService) {
+        public DownloadManagementService(ILogger<DownloadManagementService> logger, IDownloadStatusNotifier notifier, IMediaDownloader youtubeDl, IDownloaderServiceConfiguration serviceConfig, IFileManager fileManager) {
             this.logger = logger;
             this.notifier = notifier;
             this.youtubeDl = youtubeDl;
             this.serviceConfig = serviceConfig;
             this.fileManager = fileManager;
-            this.cleanupService = cleanupService;
         }
 
         public int ActiveDownloadCount => runningDownloads.Count;
@@ -37,7 +35,6 @@ namespace TomiSoft.YoutubeDownloader.BusinessLogic.Services
 
             runningDownloads.Remove(download);
             completedDownloads.Add(completedDownload);
-            cleanupService.MarkToCleanup(completedDownload);
 
             this.logger.LogInformation($"Download completed with GUID: {download.DownloadID}");
         }

@@ -1,4 +1,4 @@
-﻿namespace TomiSoft.YouTubeDownloader.WebUI
+﻿namespace TomiSoft.YouTubeDownloader.WebUI.Configuration
 {
     public class MetricServerConfiguration
     {

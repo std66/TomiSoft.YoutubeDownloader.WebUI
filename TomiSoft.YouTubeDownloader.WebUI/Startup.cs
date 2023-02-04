@@ -11,8 +11,10 @@ using TomiSoft.YoutubeDownloader;
 using TomiSoft.YoutubeDownloader.BusinessLogic;
 using TomiSoft.YoutubeDownloader.BusinessLogic.Configuration;
 using TomiSoft.YoutubeDownloader.BusinessLogic.Services;
+using TomiSoft.YouTubeDownloader.WebUI.Configuration;
 using TomiSoft.YouTubeDownloader.WebUI.Core;
 using TomiSoft.YouTubeDownloader.WebUI.Core.Media;
+using TomiSoft.YouTubeDownloader.WebUI.DataRetention;
 using TomiSoft.YouTubeDownloader.WebUI.HostedServices;
 using TomiSoft.YouTubeDownloader.WebUI.Hubs;
 using TomiSoft.YouTubeDownloader.WebUI.Metrics;
@@ -32,6 +34,10 @@ namespace TomiSoft.YouTubeDownloader.WebUI
             YoutubeConfiguration ytconfig = new YoutubeConfiguration();
             Configuration.GetSection("YoutubeConfiguration").Bind(ytconfig);
             YoutubeConfiguration = ytconfig;
+
+            DataRetentionConfiguration dataRetentionConfiguration = new DataRetentionConfiguration();
+            Configuration.GetSection("DataRetention").Bind(dataRetentionConfiguration);
+            DataRetentionConfiguration = dataRetentionConfiguration;
         }
 
         public IConfiguration Configuration { get; }
@@ -39,6 +45,7 @@ namespace TomiSoft.YouTubeDownloader.WebUI
         private YoutubeConfiguration YoutubeConfiguration { get; }
 
         private MetricServerConfiguration MetricsConfiguration { get; }
+        public DataRetentionConfiguration DataRetentionConfiguration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -50,6 +57,9 @@ namespace TomiSoft.YouTubeDownloader.WebUI
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services
+                .AddSingleton<IMediaDownloader, YoutubeDl>();
+
             if (MetricsConfiguration.Enabled)
             {
                 services.AddMetricServer(options =>
@@ -60,17 +70,15 @@ namespace TomiSoft.YouTubeDownloader.WebUI
 
                 services
                     .AddSingleton<IMediaDownloadMetrics, MediaDownloadMetrics>()
-                    .AddSingleton<YoutubeDl>()
-                    .AddSingleton<IMediaDownloader>(provider => {
-                        return new MediaDownloaderMetricsDecorator(
-                            downloader: provider.GetRequiredService<YoutubeDl>(),
-                            metrics: provider.GetRequiredService<IMediaDownloadMetrics>()
-                        );
-                    });
+                    .Decorate<IMediaDownloader, MediaDownloaderMetricsDecorator>();
             }
-            else {
+
+            if (DataRetentionConfiguration.Enabled) {
                 services
-                    .AddSingleton<IMediaDownloader, YoutubeDl>();
+                    .AddSingleton<IDownloadedFileCleanupService, DownloadedFileCleanupService>()
+                    .AddSingleton<IDataRetentionConfiguration>(DataRetentionConfiguration)
+                    .AddHostedService<CleanupHostedService>()
+                    .Decorate<IMediaDownloader, MediaDownloaderDataRetentionDecorator>();
             }
 
             services
@@ -85,7 +93,6 @@ namespace TomiSoft.YouTubeDownloader.WebUI
                 .AddSingleton<IDownloadStatusNotifier, DownloadStatusNotifier>();
 
             services
-                .AddHostedService<CleanupHostedService>()
                 .AddHostedService<MaintenanceHostedService>()
                 .AddHostedService<BackgroundDownloaderService>();
 

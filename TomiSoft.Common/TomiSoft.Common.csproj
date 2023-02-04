@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.FileProviders.Physical" Version="5.0.0" />
+	<PackageReference Include="CliWrap" Version="3.6.0" />
   </ItemGroup>
 
 </Project>

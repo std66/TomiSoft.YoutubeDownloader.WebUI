@@ -25,8 +25,8 @@ namespace TomiSoft.YouTubeDownloader.WebUI.HostedServices
             this.logger.LogInformation($"{nameof(BackgroundDownloaderService)} has started.");
 
             while (!stoppingToken.IsCancellationRequested) {
+                await WaitForMaintenanceAsync(stoppingToken);
                 await StartNewDownloadsFromQueueAsync(stoppingToken);
-                await Task.Delay(500);
             }
 
             this.logger.LogInformation($"{nameof(BackgroundDownloaderService)} has stopped because of a cancellation request.");
@@ -34,11 +34,17 @@ namespace TomiSoft.YouTubeDownloader.WebUI.HostedServices
 
         private async Task StartNewDownloadsFromQueueAsync(CancellationToken cancellationToken) {
             await this.requestQueue.WaitForAvailableItemAsync(cancellationToken);
-
-            if (!maintenanceService.IsMaintenanceRunning) {
-                DownloadRequestBM request = this.requestQueue.Dequeue(cancellationToken);
+            
+            if (this.requestQueue.TryDequeue(out DownloadRequestBM request))
                 downloadManager.StartDownload(request);
+        }
+
+        private Task WaitForMaintenanceAsync(CancellationToken stoppingToken) {
+            if (maintenanceService.IsMaintenanceRunning) {
+                return Task.Delay(500, stoppingToken);
             }
+
+            return Task.CompletedTask;
         }
     }
 }

@@ -11,14 +11,15 @@ namespace TomiSoft.YoutubeDownloader.BusinessLogic.Services {
         private readonly IDownloadManagementService statusManager;
         private readonly IPersistedServiceStatusDataManager serviceStatus;
         private readonly IAutoUpdateConfiguration autoUpdateConfiguration;
+        private readonly IMaintenanceStatusNotifier maintenanceStatusNotifier;
 
-        public MaintenanceService(ILogger<MaintenanceService> logger, IMediaDownloader youtubeDl, IDownloadManagementService statusManager, IPersistedServiceStatusDataManager serviceStatus, IAutoUpdateConfiguration autoUpdateConfiguration) {
+        public MaintenanceService(ILogger<MaintenanceService> logger, IMediaDownloader youtubeDl, IDownloadManagementService statusManager, IPersistedServiceStatusDataManager serviceStatus, IAutoUpdateConfiguration autoUpdateConfiguration, IMaintenanceStatusNotifier maintenanceStatusNotifier) {
             this.logger = logger;
             this.youtubeDl = youtubeDl;
             this.statusManager = statusManager;
             this.serviceStatus = serviceStatus;
             this.autoUpdateConfiguration = autoUpdateConfiguration;
-
+            this.maintenanceStatusNotifier = maintenanceStatusNotifier;
             logger.LogInformation($"Built-in automatic updates are enabled and will occur every {autoUpdateConfiguration.UpdateIntervalInHours} hours.");
         }
 
@@ -34,6 +35,7 @@ namespace TomiSoft.YoutubeDownloader.BusinessLogic.Services {
 
         private void UpdateMediaDownloader() {
             this.logger.LogInformation("Starting maintenance update...");
+            maintenanceStatusNotifier.NotifyMaintenanceStart();
 
             string OldVersion = this.youtubeDl.GetVersion();
             this.youtubeDl.Update();
@@ -48,6 +50,7 @@ namespace TomiSoft.YoutubeDownloader.BusinessLogic.Services {
 
             this.serviceStatus.LastUpdate = DateTime.UtcNow;
             this.IsMaintenanceRunning = false;
+            maintenanceStatusNotifier.NotifyMaintenanceComplete();
         }
 
         private async Task PrepareForMaintenanceAsync() {

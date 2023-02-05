@@ -8,6 +8,9 @@ class ViewModel {
 
         this.signalR.on("UseDownloadId", (x) => this.downloadId = x);
         this.signalR.on("UpdateDownloadStatus", (x) => this.UpdateDownloadStatus(x));
+
+        this.signalR.on("MaintenanceStarted", () => $("#autoUpdateAlert").show());
+        this.signalR.on("MaintenanceCompleted", () => $("#autoUpdateAlert").hide());
     }
 
     isValidURL(string) {

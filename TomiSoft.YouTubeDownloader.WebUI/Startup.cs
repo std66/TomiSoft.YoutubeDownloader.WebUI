@@ -80,6 +80,7 @@ namespace TomiSoft.YouTubeDownloader.WebUI
             if (AutoUpdateConfiguration.Enabled) {
                 services
                     .AddSingleton<IMaintenanceService, MaintenanceService>()
+                    .AddSingleton<IMaintenanceStatusNotifier, MaintenanceStatusNotifier>()
                     .AddSingleton<IAutoUpdateConfiguration>(AutoUpdateConfiguration)
                     .AddHostedService<MaintenanceHostedService>();
             }

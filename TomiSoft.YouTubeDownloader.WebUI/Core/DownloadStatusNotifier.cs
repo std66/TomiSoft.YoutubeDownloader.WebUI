@@ -12,7 +12,7 @@ namespace TomiSoft.YouTubeDownloader.WebUI.Core {
             this.hubContext = hubContext;
         }
 
-        public void Notify(Guid downloadId, DownloadState downloadState, double percentCompleted) {
+        public void Notify(Guid downloadId, DownloadState downloadState, double percentCompleted) { 
             hubContext.Clients.Group(downloadId.ToString()).SendAsync("UpdateDownloadStatus", new {
                 DownloadStatus = downloadState.ToString(),
                 Percent = percentCompleted

@@ -2,6 +2,18 @@
     ViewData["Title"] = "Home Page";
 }
 
+<div class="container mt-5" id="autoUpdateAlert" style="display: @(ViewBag.MaintenanceRunning ? "block" : "none");">
+    <div class="row">
+        <div class="col">
+            <div class="alert alert-info" role="alert">
+                <i class="fas fa-exclamation-triangle"></i>
+                Automatic maintenance is in progress. New downloads will not start until this process completes.
+                Thank you for your patience.
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- start page -->
 <div class="container mt-5" id="mediaUriInputBox">
     <div class="row">

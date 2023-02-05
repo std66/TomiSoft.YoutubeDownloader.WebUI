@@ -18,7 +18,7 @@ namespace TomiSoft.YouTubeDownloader.WebUI.HostedServices {
             logger.LogInformation($"{nameof(MaintenanceHostedService)} started.");
             while (!stoppingToken.IsCancellationRequested) {
                 await maintenanceService.RunMaintenanceAsync();
-                await Task.Delay(60 * 1000, stoppingToken).ContinueWith(x => { });
+                await Task.Delay(2000, stoppingToken).ContinueWith(x => { });
             }
 
             logger.LogInformation($"{nameof(MaintenanceHostedService)} stopped due to cancellation request.");

@@ -27,25 +27,21 @@ namespace TomiSoft.YouTubeDownloader.WebUI
         {
             Configuration = configuration;
 
-            MetricServerConfiguration config = new MetricServerConfiguration();
-            configuration.GetSection("Metrics").Bind(config);
-            MetricsConfiguration = config;
-
-            YoutubeConfiguration ytconfig = new YoutubeConfiguration();
-            Configuration.GetSection("YoutubeConfiguration").Bind(ytconfig);
-            YoutubeConfiguration = ytconfig;
-
-            DataRetentionConfiguration dataRetentionConfiguration = new DataRetentionConfiguration();
-            Configuration.GetSection("DataRetention").Bind(dataRetentionConfiguration);
-            DataRetentionConfiguration = dataRetentionConfiguration;
+            configuration.GetSection("Metrics").Bind(MetricsConfiguration);
+            Configuration.GetSection("YoutubeConfiguration").Bind(YoutubeConfiguration);
+            Configuration.GetSection("DataRetention").Bind(DataRetentionConfiguration);
+            Configuration.GetSection("AutoUpdate").Bind(AutoUpdateConfiguration);
         }
 
         public IConfiguration Configuration { get; }
 
-        private YoutubeConfiguration YoutubeConfiguration { get; }
+        private YoutubeConfiguration YoutubeConfiguration { get; } = new YoutubeConfiguration();
 
-        private MetricServerConfiguration MetricsConfiguration { get; }
-        public DataRetentionConfiguration DataRetentionConfiguration { get; }
+        private MetricServerConfiguration MetricsConfiguration { get; } = new MetricServerConfiguration();
+
+        public DataRetentionConfiguration DataRetentionConfiguration { get; } = new DataRetentionConfiguration();
+
+        public AutoUpdateConfiguration AutoUpdateConfiguration { get; } = new AutoUpdateConfiguration();
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -81,6 +77,18 @@ namespace TomiSoft.YouTubeDownloader.WebUI
                     .Decorate<IMediaDownloader, MediaDownloaderDataRetentionDecorator>();
             }
 
+            if (AutoUpdateConfiguration.Enabled) {
+                services
+                    .AddSingleton<IMaintenanceService, MaintenanceService>()
+                    .AddSingleton<IAutoUpdateConfiguration>(AutoUpdateConfiguration)
+                    .AddHostedService<MaintenanceHostedService>();
+            }
+            else {
+                services
+                    .AddSingleton<IMaintenanceService, NoopMaintenanceService>();
+            }
+
+
             services
                 .AddYoutubeDownloaderCore();
 
@@ -93,7 +101,6 @@ namespace TomiSoft.YouTubeDownloader.WebUI
                 .AddSingleton<IDownloadStatusNotifier, DownloadStatusNotifier>();
 
             services
-                .AddHostedService<MaintenanceHostedService>()
                 .AddHostedService<BackgroundDownloaderService>();
 
             services.AddSignalR();

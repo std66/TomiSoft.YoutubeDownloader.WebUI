@@ -1,134 +1,133 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+	ViewData["Title"] = "Home Page";
 }
 
 <div class="container mt-5" id="autoUpdateAlert" style="display: @(ViewBag.MaintenanceRunning ? "block" : "none");">
-    <div class="row">
-        <div class="col">
-            <div class="alert alert-info" role="alert">
-                <i class="fas fa-exclamation-triangle"></i>
-                Automatic maintenance is in progress. New downloads will not start until this process completes.
-                Thank you for your patience.
-            </div>
-        </div>
-    </div>
+	<div class="row">
+		<div class="col">
+			<div class="alert alert-info" role="alert">
+				<i class="fas fa-exclamation-triangle"></i>
+				Automatic maintenance is in progress. New downloads will not start until this process completes.
+				Thank you for your patience.
+			</div>
+		</div>
+	</div>
 </div>
 
 <!-- start page -->
 <div class="container mt-5" id="mediaUriInputBox">
-    <div class="row">
-        <div class="col">
-            <div class="input-group input-group-lg">
-                <input type="text" id="mediaUri" class="form-control" placeholder="Paste video link here" aria-label="Paste video link here" aria-describedby="button-addon2">
-                <div class="input-group-append">
-                    <button class="btn btn-outline-secondary" type="button" id="button-addon2" onclick="initDownload()">Download</button>
-                </div>
-            </div>
-        </div>
-    </div>
+	<div class="row">
+		<div class="col">
+			<div class="input-group input-group-lg">
+				<input type="text" id="mediaUri" class="form-control" placeholder="Paste video link here" aria-label="Paste video link here" aria-describedby="button-addon2">
+				<div class="input-group-append">
+					<button class="btn btn-outline-secondary" type="button" id="button-addon2" onclick="initDownload()">Download</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
-    <div class="row">
-        <div class="col">
-            <div class="btn-group btn-group-toggle mt-3" data-toggle="buttons">
-                <label class="btn btn-outline-info">
-                    <input type="radio" name="targetFormat" id="option1" autocomplete="off" value="video"> Video
-                </label>
-                <label class="btn btn-outline-info active">
-                    <input type="radio" name="targetFormat" id="option2" autocomplete="off" value="mp3audio" checked> MP3
-                </label>
-            </div>
-        </div>
-    </div>
+	<div class="row">
+		<div class="col">
+			<div class="btn-group btn-group-toggle mt-3" data-toggle="buttons">
+				<label class="btn btn-outline-info">
+					<input type="radio" name="targetFormat" id="option1" autocomplete="off" value="video"> Video
+				</label>
+				<label class="btn btn-outline-info active">
+					<input type="radio" name="targetFormat" id="option2" autocomplete="off" value="mp3audio" checked> MP3
+				</label>
+			</div>
+		</div>
+	</div>
 </div>
 
 <!-- loader page -->
 <div class="container mt-5 text-center hidden" id="loader">
-    <div class="row">
-        <div class="col">
-            <h1><i class="fas fa-sync-alt fa-spin"></i></h1>
-        </div>
-    </div>
+	<div class="row">
+		<div class="col">
+			<h1><i class="fas fa-sync-alt fa-spin"></i></h1>
+		</div>
+	</div>
 
-    <div class="row">
-        <div class="col">
-            <h3>Getting things ready...</h3>
-        </div>
-    </div>
+	<div class="row">
+		<div class="col">
+			<h3>Getting things ready...</h3>
+		</div>
+	</div>
 </div>
 
 <!-- media info & download status page -->
 <div class="container mt-5 hidden" id="downloadStatus">
-    <div class="row">
-        <div class="col">
-            <h1>Just a moment...</h1>
-        </div>
-    </div>
+	<div class="row">
+		<div class="col">
+			<h1>Just a moment...</h1>
+		</div>
+	</div>
 
-    <div class="row">
-        <div class="col">
-            <p>We are downloading the video from <a href="#" id="video-url">umm... nowhere?!</a></p>
-            <p>Current status: <span id="downloadStatusText">We are doing nothing.</span></p>
-        </div>
-    </div>
+	<div class="row">
+		<div class="col">
+			<p>We are downloading the video from <a href="#" id="video-url">umm... nowhere?!</a></p>
+			<p>Current status: <span id="downloadStatusText">We are doing nothing.</span></p>
+		</div>
+	</div>
 
-    <div class="row">
-        <div class="col">
-            <div class="progress">
-                <div class="progress-bar bg-success" role="progressbar" style="width: 34%" aria-valuenow="34" aria-valuemin="0" aria-valuemax="100" id="progressbar"></div>
-            </div>
-        </div>
-    </div>
+	<div class="row mb-4">
+		<div class="col">
+			<div class="progress">
+				<div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" role="progressbar" style="width: 34%" aria-valuenow="34" aria-valuemin="0" aria-valuemax="100" id="progressbar"></div>
+			</div>
+		</div>
+	</div>
 
-    <div class="row mt-3">
-        <div class="col">
-            <div class="media">
-                <img class="align-self-start mr-3" src="images/dummy_thumbnail.png" alt="Video thumbnail" style="max-height: 150px;" id="video-thumbnail">
-                <div class="media-body">
-                    <h5 class="mt-0" id="video-title">There is no video :(</h5>
-                    <p style="max-height: 100px; overflow: hidden;" id="video-description">
-                        There's something gone wrong. You should not be seeing this. Sorry...
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
+	<div class="row">
+		<div class="col-sm-12 col-md-4 col-lg-3 sm-centered">
+			<img class="sm-centered img-fluid img-thumbnail" src="~/images/dummy_thumbnail.png" alt="Video thumbnail" id="video-thumbnail">
+		</div>
+		
+		<div class="col-sm-12 col-md-8 col-lg-9 sm-centered">
+			<p class="lead" id="video-title" style="font-weight: bold;">There is no video :(</p>
+			<p style="max-height: 100px; overflow: hidden;" id="video-description">
+				There's something gone wrong. You should not see this. Sorry...
+			</p>
+		</div>
+	</div>
 </div>
 
 <!-- fatal SignalR error -->
 <div class="container mt-5 hidden" id="fatalSignalRError">
-    <div class="row">
-        <div class="col">
-            <div class="alert alert-danger" role="alert">
-                <b>Fatal error:</b> failed to connect to the backend server.
-            </div>
-        </div>
-    </div>
+	<div class="row">
+		<div class="col">
+			<div class="alert alert-danger" role="alert">
+				<b>Fatal error:</b> failed to connect to the backend server.
+			</div>
+		</div>
+	</div>
 
-    <div class="row">
-        <div class="col">
-            <p>
-                <a href="javascript:window.location.reload()" class="btn btn-sm btn-primary">Reload page</a>
-            </p>
-        </div>
-    </div>
+	<div class="row">
+		<div class="col">
+			<p>
+				<a href="javascript:window.location.reload()" class="btn btn-sm btn-primary">Reload page</a>
+			</p>
+		</div>
+	</div>
 </div>
 
 <!-- modal (for displaying error messages) -->
 <div class="modal" tabindex="-1" role="dialog" id="myModal">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Something went wrong</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p id="modal-message">Modal body text goes here.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Something went wrong</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<p id="modal-message">Modal body text goes here.</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
 </div>

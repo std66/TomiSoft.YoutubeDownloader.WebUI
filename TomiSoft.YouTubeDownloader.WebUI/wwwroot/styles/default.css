@@ -13,3 +13,16 @@
     margin-left: auto;
     margin-right: auto;
 }
+
+@media (max-width: 767px) {
+    .sm-centered {
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    #video-thumbnail {
+        max-height: 200px;
+        margin-bottom: 15px;
+    }
+}

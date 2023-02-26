@@ -7,6 +7,7 @@ using TomiSoft.YoutubeDownloader.BusinessLogic.Services;
 using TomiSoft.YoutubeDownloader.Media;
 using TomiSoft.YouTubeDownloader.BusinessLogic.BusinessModels;
 using TomiSoft.YouTubeDownloader.BusinessLogic.DataManagement;
+using TomiSoft.YouTubeDownloader.WebUI.Models;
 
 namespace TomiSoft.YouTubeDownloader.WebUI.Hubs {
     public class DownloadHub : Hub {
@@ -42,10 +43,12 @@ namespace TomiSoft.YouTubeDownloader.WebUI.Hubs {
             if (Guid.TryParse(DownloadId, out Guid downloadGuid)) {
                 DownloadStatusBM progress = this.downloaderService.GetDownloadStatus(downloadGuid);
 
-                await Clients.Caller.SendAsync("UpdateDownloadStatus", new {
-                    DownloadStatus = progress.Status.ToString(),
-                    Percent = progress.Percentage
-                });
+                await Clients
+                    .Caller
+                    .SendAsync(
+                        "UpdateDownloadStatus",
+                        new UpdateDownloadStatus(progress.Status.ToString(), progress.Percentage)
+                    );
             }
         }
     }

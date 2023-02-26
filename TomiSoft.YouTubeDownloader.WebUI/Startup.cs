@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -28,9 +29,9 @@ namespace TomiSoft.YouTubeDownloader.WebUI
             Configuration = configuration;
 
             configuration.GetSection("Metrics").Bind(MetricsConfiguration);
-            Configuration.GetSection("YoutubeConfiguration").Bind(YoutubeConfiguration);
-            Configuration.GetSection("DataRetention").Bind(DataRetentionConfiguration);
-            Configuration.GetSection("AutoUpdate").Bind(AutoUpdateConfiguration);
+            configuration.GetSection("YoutubeConfiguration").Bind(YoutubeConfiguration);
+            configuration.GetSection("DataRetention").Bind(DataRetentionConfiguration);
+            configuration.GetSection("AutoUpdate").Bind(AutoUpdateConfiguration);
         }
 
         public IConfiguration Configuration { get; }
@@ -89,7 +90,6 @@ namespace TomiSoft.YouTubeDownloader.WebUI
                     .AddSingleton<IMaintenanceService, NoopMaintenanceService>();
             }
 
-
             services
                 .AddYoutubeDownloaderCore();
 
@@ -104,7 +104,12 @@ namespace TomiSoft.YouTubeDownloader.WebUI
             services
                 .AddHostedService<BackgroundDownloaderService>();
 
-            services.AddSignalR();
+            ISignalRServerBuilder signalrBuilder = services.AddSignalR();
+            string redisConnectionString = Configuration.GetConnectionString("Redis");
+            if (!string.IsNullOrWhiteSpace(redisConnectionString)) {
+                signalrBuilder.AddStackExchangeRedis(redisConnectionString);
+            }
+
             services.AddMvc(options => options.EnableEndpointRouting = false);
         }
 

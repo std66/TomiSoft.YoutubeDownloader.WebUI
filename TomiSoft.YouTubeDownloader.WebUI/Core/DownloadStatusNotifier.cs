@@ -3,6 +3,7 @@ using System;
 using TomiSoft.YoutubeDownloader.BusinessLogic.Services;
 using TomiSoft.YoutubeDownloader.Downloading;
 using TomiSoft.YouTubeDownloader.WebUI.Hubs;
+using TomiSoft.YouTubeDownloader.WebUI.Models;
 
 namespace TomiSoft.YouTubeDownloader.WebUI.Core {
     public class DownloadStatusNotifier : IDownloadStatusNotifier {
@@ -13,10 +14,11 @@ namespace TomiSoft.YouTubeDownloader.WebUI.Core {
         }
 
         public void Notify(Guid downloadId, DownloadState downloadState, double percentCompleted) { 
-            hubContext.Clients.Group(downloadId.ToString()).SendAsync("UpdateDownloadStatus", new {
-                DownloadStatus = downloadState.ToString(),
-                Percent = percentCompleted
-            }).ConfigureAwait(false);
+            hubContext
+                .Clients
+                .Group(downloadId.ToString())
+                .SendAsync("UpdateDownloadStatus", new UpdateDownloadStatus(downloadState.ToString(), percentCompleted))
+                .ConfigureAwait(false);
         }
     }
 }

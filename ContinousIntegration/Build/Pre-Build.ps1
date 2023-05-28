@@ -52,7 +52,16 @@ if ($Env:APPVEYOR -ne $null) {
 	
 	foreach ($TestLogFile in Get-ChildItem *.trx -Recurse) {
 		$filePath = $TestLogFile.FullName
-		$webclient.UploadFile("https://ci.appveyor.com/api/testresults/mstest/${env:APPVEYOR_JOB_ID}", $filePath)
+		try {
+			Write-Host "Uploading '$filePath'... " -NoNewline
+			$webclient.UploadFile("https://ci.appveyor.com/api/testresults/mstest/${env:APPVEYOR_JOB_ID}", $filePath)
+			Write-Host "Successful"
+		}
+		catch {
+			Write-Host "Failed"
+			Write-Error "Exception occurred while uploading test results file '$filePath'"
+			Write-Error $_.Message
+		}
 		Remove-Item $filePath
 	}
 }

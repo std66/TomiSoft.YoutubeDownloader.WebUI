@@ -1,6 +1,6 @@
 ﻿namespace TomiSoft.YoutubeDownloader.Media {
-    public interface ILikeableMedia {
-        int Likes { get; }
-        int Dislikes { get; }
-    }
+	public interface ILikeableMedia {
+		int Likes { get; }
+		int Dislikes { get; }
+	}
 }

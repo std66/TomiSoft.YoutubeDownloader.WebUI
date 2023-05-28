@@ -2,15 +2,15 @@
 using System.Threading.Tasks;
 
 namespace TomiSoft.YoutubeDownloader.BusinessLogic.Services {
-    public class NoopMaintenanceService : IMaintenanceService {
-        public bool IsMaintenanceRunning => false;
+	public class NoopMaintenanceService : IMaintenanceService {
+		public bool IsMaintenanceRunning => false;
 
-        public NoopMaintenanceService(ILogger<NoopMaintenanceService> logger) {
-            logger.LogInformation("Built-in automatic updater is disabled.");
-        }
+		public NoopMaintenanceService(ILogger<NoopMaintenanceService> logger) {
+			logger.LogInformation("Built-in automatic updater is disabled.");
+		}
 
-        public Task RunMaintenanceAsync() {
-            return Task.CompletedTask;
-        }
-    }
+		public Task RunMaintenanceAsync() {
+			return Task.CompletedTask;
+		}
+	}
 }

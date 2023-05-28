@@ -3,24 +3,24 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace TomiSoft.Common.Hosting {
-    public class QueueService<T> : IQueueService<T> {
-        private readonly ConcurrentQueue<T> queue = new ConcurrentQueue<T>();
-        private readonly SemaphoreSlim semaphore = new SemaphoreSlim(0);
+	public class QueueService<T> : IQueueService<T> {
+		private readonly ConcurrentQueue<T> queue = new ConcurrentQueue<T>();
+		private readonly SemaphoreSlim semaphore = new SemaphoreSlim(0);
 
-        public void Enqueue(T item) {
-            this.queue.Enqueue(item);
-            this.semaphore.Release();
-        }
+		public void Enqueue(T item) {
+			this.queue.Enqueue(item);
+			this.semaphore.Release();
+		}
 
-        public Task WaitForAvailableItemAsync(CancellationToken cancellationToken) {
-            if (queue.Count == 0)
-                return semaphore.WaitAsync(cancellationToken);
+		public Task WaitForAvailableItemAsync(CancellationToken cancellationToken) {
+			if (queue.Count == 0)
+				return semaphore.WaitAsync(cancellationToken);
 
-            return Task.CompletedTask;
-        }
+			return Task.CompletedTask;
+		}
 
-        public bool TryDequeue(out T result) {
-            return this.queue.TryDequeue(out result);
-        }
-    }
+		public bool TryDequeue(out T result) {
+			return this.queue.TryDequeue(out result);
+		}
+	}
 }

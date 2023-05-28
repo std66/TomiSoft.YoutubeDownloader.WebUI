@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29326.143
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33723.286
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TomiSoft.YoutubeDownloader", "Tomisoft.YoutubeDownloader\TomiSoft.YoutubeDownloader.csproj", "{78F8940C-59C5-4F6A-B822-59A0BD7ED1BE}"
 EndProject
@@ -13,9 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TomiSoft.YoutubeDownloader.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TomiSoft.Common", "TomiSoft.Common\TomiSoft.Common.csproj", "{E6CCD148-B357-41A3-8340-9C17B69B5A97}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TomiSoft.Common.Tests", "TomiSoft.Common.Tests\TomiSoft.Common.Tests.csproj", "{9D61D3B4-7C95-4170-BED0-3C7D1E600334}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TomiSoft.YoutubeDownloader.BusinessLogic", "TomiSoft.YoutubeDownloader.BusinessLogic\TomiSoft.YoutubeDownloader.BusinessLogic.csproj", "{618431AE-664C-4082-9091-D2610B3A3157}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TomiSoft.YoutubeDownloader.BusinessLogic", "TomiSoft.YoutubeDownloader.BusinessLogic\TomiSoft.YoutubeDownloader.BusinessLogic.csproj", "{618431AE-664C-4082-9091-D2610B3A3157}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4BC7F7B8-72F8-4942-AA83-9F4D61ECAB99}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,10 +43,6 @@ Global
 		{E6CCD148-B357-41A3-8340-9C17B69B5A97}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E6CCD148-B357-41A3-8340-9C17B69B5A97}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E6CCD148-B357-41A3-8340-9C17B69B5A97}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9D61D3B4-7C95-4170-BED0-3C7D1E600334}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9D61D3B4-7C95-4170-BED0-3C7D1E600334}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9D61D3B4-7C95-4170-BED0-3C7D1E600334}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9D61D3B4-7C95-4170-BED0-3C7D1E600334}.Release|Any CPU.Build.0 = Release|Any CPU
 		{618431AE-664C-4082-9091-D2610B3A3157}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{618431AE-664C-4082-9091-D2610B3A3157}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{618431AE-664C-4082-9091-D2610B3A3157}.Release|Any CPU.ActiveCfg = Release|Any CPU

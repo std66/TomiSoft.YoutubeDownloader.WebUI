@@ -102,7 +102,7 @@ namespace TomiSoft.YoutubeDownloader.Downloading {
 		}
 
 		private void Exited(object sender, EventArgs e) {
-			this.Status = this.DownloaderProcess.ExitCode == 0 ? DownloadState.Completed : DownloadState.Failed;
+			this.Status = this.DownloaderProcess.ExitedSuccessfully ? DownloadState.Completed : DownloadState.Failed;
 		}
 	}
 }

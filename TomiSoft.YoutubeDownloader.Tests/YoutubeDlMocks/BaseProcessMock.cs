@@ -135,5 +135,9 @@ namespace TomiSoft.YoutubeDownloader.Tests.YoutubeDlMocks {
 			return MockEventArgs;
 
 		}
+
+		public IAsyncProcess CreateAsyncProcess() {
+			throw new NotImplementedException();
+		}
 	}
 }

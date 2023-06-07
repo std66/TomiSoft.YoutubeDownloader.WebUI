@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using TomiSoft.YoutubeDownloader;
 using TomiSoft.YoutubeDownloader.BusinessLogic.Services;
 using TomiSoft.YoutubeDownloader.Downloading;
@@ -18,8 +19,8 @@ namespace TomiSoft.YouTubeDownloader.WebUI.DataRetention {
 			return mediaDownloader.GetMediaInformation(MediaUri);
 		}
 
-		public string GetVersion() {
-			return mediaDownloader.GetVersion();
+		public Task<string> GetVersionAsync() {
+			return mediaDownloader.GetVersionAsync();
 		}
 
 		public IDownload PrepareDownload(Uri MediaUri, MediaFormat MediaFormat, string downloadDirectory) {

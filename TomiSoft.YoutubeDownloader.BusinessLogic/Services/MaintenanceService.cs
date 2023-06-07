@@ -29,17 +29,17 @@ namespace TomiSoft.YoutubeDownloader.BusinessLogic.Services {
 			await PrepareForMaintenanceAsync();
 
 			if (this.IsMaintenanceRunning && statusManager.ActiveDownloadCount == 0) {
-				UpdateMediaDownloader();
+				await UpdateMediaDownloaderAsync();
 			}
 		}
 
-		private void UpdateMediaDownloader() {
+		private async Task UpdateMediaDownloaderAsync() {
 			this.logger.LogInformation("Starting maintenance update...");
 			maintenanceStatusNotifier.NotifyMaintenanceStart();
 
-			string OldVersion = this.youtubeDl.GetVersion();
+			string OldVersion = await this.youtubeDl.GetVersionAsync();
 			this.youtubeDl.Update();
-			string NewVersion = this.youtubeDl.GetVersion();
+			string NewVersion = await this.youtubeDl.GetVersionAsync();
 
 			string logNextUpdateTime = $"Next update is scheduled at {(DateTime.UtcNow + TimeSpan.FromHours(autoUpdateConfiguration.UpdateIntervalInHours)):o}";
 
@@ -48,7 +48,7 @@ namespace TomiSoft.YoutubeDownloader.BusinessLogic.Services {
 			else
 				this.logger.LogInformation($"Maintenance update has completed. There is no new version available. Current version is '{NewVersion}'. {logNextUpdateTime}");
 
-			this.serviceStatus.SaveLastUpdateTimeAsync(DateTime.UtcNow);
+			await this.serviceStatus.SaveLastUpdateTimeAsync(DateTime.UtcNow);
 			this.IsMaintenanceRunning = false;
 			maintenanceStatusNotifier.NotifyMaintenanceComplete();
 		}

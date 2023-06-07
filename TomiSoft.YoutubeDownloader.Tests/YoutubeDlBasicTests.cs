@@ -1,5 +1,8 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using System;
+using System.Threading.Tasks;
+using TomiSoft.Common.SystemProcess;
 using TomiSoft.YoutubeDownloader.Exceptions;
 using TomiSoft.YoutubeDownloader.Media;
 using TomiSoft.YoutubeDownloader.Tests.YoutubeDlMocks;
@@ -8,17 +11,29 @@ namespace TomiSoft.YoutubeDownloader.Tests {
 	[TestClass]
 	public class YoutubeDlBasicTests {
 		[TestMethod]
-		public void CanGetVersion() {
+		public async Task CanGetVersionAsync() {
 			string expectedVersion = "2018.12.11.";
 
-			MockForGetVersionTest processMock = new MockForGetVersionTest(expectedVersion);
+			Mock<IAsyncProcess> asyncProcessMock = new Mock<IAsyncProcess>(MockBehavior.Strict);
+			asyncProcessMock
+				.Setup(x => x.StartAsync(It.Is<string[]>(y => y.Length == 1 && y[0] == "--version")))
+				.ReturnsAsync(
+					new ProcessExecutionResult(0, new string[] { expectedVersion }, Array.Empty<string>())
+				)
+				.Verifiable();
 
-			YoutubeDl downloader = new YoutubeDl(processMock);
-			string actual = downloader.GetVersion();
+			Mock<IProcessFactory> factoryMock = new Mock<IProcessFactory>(MockBehavior.Strict);
+			factoryMock
+				.Setup(x => x.CreateAsyncProcess())
+				.Returns(asyncProcessMock.Object)
+				.Verifiable();
 
-			Assert.IsTrue(processMock.ParametersPassedCorrectly);
-			Assert.IsTrue(processMock.ExitedSuccessfully);
+			YoutubeDl downloader = new YoutubeDl(factoryMock.Object);
+			string actual = await downloader.GetVersionAsync();
+
 			Assert.AreEqual(expectedVersion, actual);
+			factoryMock.VerifyAll();
+			asyncProcessMock.VerifyAll();
 		}
 
 		[TestMethod]

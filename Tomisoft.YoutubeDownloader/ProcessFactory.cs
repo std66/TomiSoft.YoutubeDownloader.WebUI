@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using TomiSoft.Common.SystemProcess;
+using TomiSoft.Common.SystemProcess.CliWrap;
 
 namespace TomiSoft.YoutubeDownloader {
 	public class ProcessFactory : IProcessFactory {
@@ -15,6 +16,10 @@ namespace TomiSoft.YoutubeDownloader {
 
 		public IProcess Create(IEnumerable<string> args) {
 			return new CapturingProcess(this.ExecutablePath, args);
+		}
+
+		public IAsyncProcess CreateAsyncProcess() {
+			return new CliWrapProcess(this.ExecutablePath);
 		}
 	}
 }

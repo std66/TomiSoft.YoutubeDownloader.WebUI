@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using TomiSoft.Common.SystemProcess;
 using TomiSoft.YoutubeDownloader.Downloading;
 using TomiSoft.YoutubeDownloader.Exceptions;
@@ -14,16 +15,13 @@ namespace TomiSoft.YoutubeDownloader {
 			this.ProcessFactory = ProcessFactory;
 		}
 
-		public string GetVersion() {
-			using (IProcess p = this.ProcessFactory.Create("--version")) {
-				p.Start();
-				p.WaitForExit();
+		public async Task<string> GetVersionAsync() {
+			var result = await this.ProcessFactory.CreateAsyncProcess().StartAsync("--version");
 
-				if (p.ExitedSuccessfully)
-					return p.StandardOutputLines[0];
-
+			if (!result.ExitedSuccessfully)
 				throw new Exception("There was an error while getting YoutubeDl's version.");
-			}
+
+			return result.StdOut[0];
 		}
 
 		public IMediaInformation GetMediaInformation(Uri MediaUri) {

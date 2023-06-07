@@ -23,7 +23,7 @@ namespace TomiSoft.YouTubeDownloader.WebUI.Controllers {
 		public async Task<IActionResult> VersionAsync() {
 			string youtubeDlVersion = null;
 			try {
-				await Task.Run(() => youtubeDlVersion = dl.GetVersion());
+				youtubeDlVersion = await dl.GetVersionAsync();
 			}
 			catch { }
 

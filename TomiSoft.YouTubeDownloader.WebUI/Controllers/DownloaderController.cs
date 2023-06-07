@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Net;
+using System.Threading.Tasks;
 using TomiSoft.YoutubeDownloader;
 using TomiSoft.YoutubeDownloader.BusinessLogic.BusinessModels;
 using TomiSoft.YoutubeDownloader.BusinessLogic.Dependencies.IO;
@@ -25,11 +26,11 @@ namespace TomiSoft.YouTubeDownloader.WebUI.Controllers {
 			this.filenameDatabase = filenameDatabase;
 		}
 
-		public IActionResult GetMediaInformation([FromQuery] Uri MediaUri) {
+		public async Task<IActionResult> GetMediaInformationAsync([FromQuery] Uri MediaUri) {
 			IMediaInformation info;
 
 			try {
-				info = this.youtubeDl.GetMediaInformation(MediaUri);
+				info = await this.youtubeDl.GetMediaInformationAsync(MediaUri);
 			}
 			catch (PrivateMediaException) {
 				return new ErrorResponse(ErrorCodes.PrivateMediaIsNotSupported, HttpStatusCode.Conflict).AsJsonResult();

@@ -24,8 +24,8 @@ namespace TomiSoft.Common.SystemProcess.CliWrap {
 		private ProcessExecutionResult MapResult(BufferedCommandResult result) {
 			return new ProcessExecutionResult(
 				result.ExitCode,
-				result.StandardOutput.Split(Newline),
-				result.StandardError.Split(Newline)
+				result.StandardOutput,
+				result.StandardError
 			);
 		}
 	}

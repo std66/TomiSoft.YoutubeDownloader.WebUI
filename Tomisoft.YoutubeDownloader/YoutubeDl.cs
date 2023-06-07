@@ -21,26 +21,22 @@ namespace TomiSoft.YoutubeDownloader {
 			if (!result.ExitedSuccessfully)
 				throw new Exception("There was an error while getting YoutubeDl's version.");
 
-			return result.StdOut[0];
+			return result.StdOutLines[0];
 		}
 
-		public IMediaInformation GetMediaInformation(Uri MediaUri) {
-			using (IProcess p = this.ProcessFactory.Create("--dump-json", MediaUri.ToString())) {
-				p.Start();
-				p.WaitForExit();
+		public async Task<IMediaInformation> GetMediaInformationAsync(Uri MediaUri) {
+			var result = await this.ProcessFactory.CreateAsyncProcess().StartAsync("--dump-json", MediaUri.ToString());
 
-				if (p.ExitedSuccessfully) {
-					string StdOut = p.GetOutputAsString();
-					return MediaInformationFactory.Create(StdOut);
-				}
-
-				TryFindMediaInformationQueryFailureReason(p, MediaUri);
-				throw new MediaInformationExtractException(p, MediaUri);
+			if (!result.ExitedSuccessfully) {
+				TryFindMediaInformationQueryFailureReason(result, MediaUri);
+				throw new MediaInformationExtractException(result, MediaUri);
 			}
+
+			return MediaInformationFactory.Create(result.StdOut);
 		}
 
-		private void TryFindMediaInformationQueryFailureReason(IProcess p, Uri MediaUri) {
-			if (p.StandardErrorLines.Any(x => x == "ERROR: Private video"))
+		private void TryFindMediaInformationQueryFailureReason(ProcessExecutionResult p, Uri MediaUri) {
+			if (p.StdErrLines.Any(x => x == "ERROR: Private video"))
 				throw new PrivateMediaException(p, MediaUri);
 		}
 

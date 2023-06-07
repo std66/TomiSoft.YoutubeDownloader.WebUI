@@ -7,10 +7,10 @@ namespace TomiSoft.YoutubeDownloader.Exceptions {
 		public string StandardError { get; }
 		public int ExitCode { get; }
 
-		public MediaInformationExtractException(IProcess Process, Uri MediaUri)
-			: base($"There was an error while getting media information. Media URI: {MediaUri} YoutubeDl stderr: {Process.GetErrorAsString()}") {
+		public MediaInformationExtractException(ProcessExecutionResult Process, Uri MediaUri)
+			: base($"There was an error while getting media information. Media URI: {MediaUri} YoutubeDl stderr: {Process.StdErr}") {
 			this.MediaUri = MediaUri;
-			this.StandardError = Process.GetErrorAsString();
+			this.StandardError = Process.StdErr;
 			this.ExitCode = Process.ExitCode;
 		}
 	}

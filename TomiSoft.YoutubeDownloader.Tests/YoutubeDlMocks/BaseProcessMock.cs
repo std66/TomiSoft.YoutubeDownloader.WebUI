@@ -137,7 +137,20 @@ namespace TomiSoft.YoutubeDownloader.Tests.YoutubeDlMocks {
 		}
 
 		public IAsyncProcess CreateAsyncProcess() {
-			throw new NotImplementedException();
+			var mock = new MockAsyncProcess();
+			mock.StartAsyncInvoked += this.Mock_StartAsyncInvoked;
+			return mock;
+		}
+
+		private ProcessExecutionResult Mock_StartAsyncInvoked(IReadOnlyList<string> args) {
+			this.ProcessStarted = true;
+			this.ParametersPassedCorrectly = this.CheckCmdLineArgs(args);
+
+			return new ProcessExecutionResult(
+				Main(args.ToArray()),
+				string.Join(Environment.NewLine, this.stdOut),
+				string.Join(Environment.NewLine, this.stdErr)
+			);
 		}
 	}
 }

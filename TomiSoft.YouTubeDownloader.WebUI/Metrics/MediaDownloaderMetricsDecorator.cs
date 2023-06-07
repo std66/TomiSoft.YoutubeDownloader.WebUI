@@ -14,8 +14,8 @@ namespace TomiSoft.YouTubeDownloader.WebUI.Metrics {
 			_downloader = downloader;
 		}
 
-		public IMediaInformation GetMediaInformation(Uri MediaUri) {
-			return _downloader.GetMediaInformation(MediaUri);
+		public Task<IMediaInformation> GetMediaInformationAsync(Uri MediaUri) {
+			return _downloader.GetMediaInformationAsync(MediaUri);
 		}
 
 		public Task<string> GetVersionAsync() {

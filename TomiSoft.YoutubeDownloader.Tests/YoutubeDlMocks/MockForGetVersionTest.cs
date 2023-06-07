@@ -14,7 +14,7 @@ namespace TomiSoft.YoutubeDownloader.Tests.YoutubeDlMocks {
 		}
 
 		protected override int Main(string[] args) {
-			Write(this.SampleOutput);
+			WriteLine(this.SampleOutput);
 			return 0;
 		}
 	}

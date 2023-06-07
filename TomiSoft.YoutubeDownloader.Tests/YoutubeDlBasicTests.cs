@@ -1,8 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
 using System;
 using System.Threading.Tasks;
-using TomiSoft.Common.SystemProcess;
 using TomiSoft.YoutubeDownloader.Exceptions;
 using TomiSoft.YoutubeDownloader.Media;
 using TomiSoft.YoutubeDownloader.Tests.YoutubeDlMocks;
@@ -14,38 +12,26 @@ namespace TomiSoft.YoutubeDownloader.Tests {
 		public async Task CanGetVersionAsync() {
 			string expectedVersion = "2018.12.11.";
 
-			Mock<IAsyncProcess> asyncProcessMock = new Mock<IAsyncProcess>(MockBehavior.Strict);
-			asyncProcessMock
-				.Setup(x => x.StartAsync(It.Is<string[]>(y => y.Length == 1 && y[0] == "--version")))
-				.ReturnsAsync(
-					new ProcessExecutionResult(0, new string[] { expectedVersion }, Array.Empty<string>())
-				)
-				.Verifiable();
+			MockForGetVersionTest mock = new MockForGetVersionTest(expectedVersion);
 
-			Mock<IProcessFactory> factoryMock = new Mock<IProcessFactory>(MockBehavior.Strict);
-			factoryMock
-				.Setup(x => x.CreateAsyncProcess())
-				.Returns(asyncProcessMock.Object)
-				.Verifiable();
-
-			YoutubeDl downloader = new YoutubeDl(factoryMock.Object);
+			YoutubeDl downloader = new YoutubeDl(mock);
 			string actual = await downloader.GetVersionAsync();
 
+			Assert.IsTrue(mock.ParametersPassedCorrectly);
+			Assert.IsTrue(mock.ProcessStarted);
 			Assert.AreEqual(expectedVersion, actual);
-			factoryMock.VerifyAll();
-			asyncProcessMock.VerifyAll();
 		}
 
 		[TestMethod]
 		[ExpectedException(typeof(MediaInformationExtractException), AllowDerivedTypes = true)]
-		public void CanHandleGetMediaInformationExceptionalCases() {
+		public async Task CanHandleGetMediaInformationExceptionalCasesAsync() {
 			MockForGetMediaInformationFaultyTest mock = new MockForGetMediaInformationFaultyTest();
 			YoutubeDl dl = new YoutubeDl(mock);
-			dl.GetMediaInformation(new Uri("http://something.com"));
+			await dl.GetMediaInformationAsync(new Uri("http://something.com"));
 		}
 
 		[TestMethod]
-		public void CanGetYoutubeMediaInformation() {
+		public async Task CanGetYoutubeMediaInformationAsync() {
 			string ExpectedVideoTitle = "sample-title";
 			string ExpectedVideoID = "hW9tIK5pcl8";
 			string ExpectedUploaderID = "sample-uploader";
@@ -75,7 +61,7 @@ namespace TomiSoft.YoutubeDownloader.Tests {
 			);
 
 			YoutubeDl downloader = new YoutubeDl(processMock);
-			IMediaInformation actual = downloader.GetMediaInformation(new Uri(ExpectedVideoUri));
+			IMediaInformation actual = await downloader.GetMediaInformationAsync(new Uri(ExpectedVideoUri));
 
 			Assert.IsTrue(processMock.ProcessStarted, "Youtube-dl was not started.");
 			Assert.IsTrue(processMock.ParametersPassedCorrectly, "Command-line arguments were passed incorrectly to youtube-dl.");

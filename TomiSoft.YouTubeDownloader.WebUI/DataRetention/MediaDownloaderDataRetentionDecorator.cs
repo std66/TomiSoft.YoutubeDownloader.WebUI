@@ -15,8 +15,8 @@ namespace TomiSoft.YouTubeDownloader.WebUI.DataRetention {
 			this.cleanupService = cleanupService;
 		}
 
-		public IMediaInformation GetMediaInformation(Uri MediaUri) {
-			return mediaDownloader.GetMediaInformation(MediaUri);
+		public Task<IMediaInformation> GetMediaInformationAsync(Uri MediaUri) {
+			return mediaDownloader.GetMediaInformationAsync(MediaUri);
 		}
 
 		public Task<string> GetVersionAsync() {

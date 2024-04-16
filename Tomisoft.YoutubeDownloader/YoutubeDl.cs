@@ -38,6 +38,9 @@ namespace TomiSoft.YoutubeDownloader {
 		private void TryFindMediaInformationQueryFailureReason(ProcessExecutionResult p, Uri MediaUri) {
 			if (p.StdErrLines.Any(x => x == "ERROR: Private video"))
 				throw new PrivateMediaException(p, MediaUri);
+
+			if (p.StdErrLines.Any(x => x.Contains("This video is only available to Music Premium members")))
+				throw new RestrictedBySubscriptionPolicyException(p, MediaUri);
 		}
 
 		public IDownload PrepareDownload(Uri MediaUri, MediaFormat MediaFormat, string downloadDirectory) {

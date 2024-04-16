@@ -35,6 +35,9 @@ namespace TomiSoft.YouTubeDownloader.WebUI.Controllers {
 			catch (PrivateMediaException) {
 				return new ErrorResponse(ErrorCodes.PrivateMediaIsNotSupported, HttpStatusCode.Conflict).AsJsonResult();
 			}
+			catch (RestrictedBySubscriptionPolicyException) {
+				return new ErrorResponse(ErrorCodes.RestrictedContentBySubscriptionPolicy, HttpStatusCode.Conflict).AsJsonResult();
+			}
 
 			if (info.IsLiveStream)
 				return new ErrorResponse(ErrorCodes.LiveStreamsAreNotSupported, HttpStatusCode.Conflict).AsJsonResult();

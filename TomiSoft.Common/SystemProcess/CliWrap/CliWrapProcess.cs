@@ -14,7 +14,8 @@ namespace TomiSoft.Common.SystemProcess.CliWrap {
 
 		public async Task<ProcessExecutionResult> StartAsync(params string[] args) {
 			Command cmd = Cli.Wrap(executablePath)
-				.WithArguments(args);
+				.WithArguments(args)
+				.WithValidation(CommandResultValidation.None);
 
 			BufferedCommandResult result = await cmd.ExecuteBufferedAsync();
 

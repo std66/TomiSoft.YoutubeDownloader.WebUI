@@ -27,6 +27,9 @@ namespace TomiSoft.YouTubeDownloader.WebUI.Core {
 		LiveStreamsAreNotSupported = 7,
 
 		[Display(Name = "Downloading private media is not supported")]
-		PrivateMediaIsNotSupported = 8
+		PrivateMediaIsNotSupported = 8,
+
+		[Display(Name = "Downloading content that requires (paid) subscription is not supported")]
+		RestrictedContentBySubscriptionPolicy = 9
 	}
 }

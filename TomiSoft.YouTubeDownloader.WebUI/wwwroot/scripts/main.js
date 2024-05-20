@@ -27,6 +27,9 @@ class ViewModel {
     }
 
     async EnqueueDownload(mediaUri, mediaFormat) {
+        if (this.signalR.state == 'Disconnected')
+            await this.signalR.start();
+
         await this.signalR
             .invoke("EnqueueDownload", mediaUri, mediaFormat)
             .catch(

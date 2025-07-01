@@ -29,6 +29,12 @@ Write-Host "=== Pre-build ==="
 Write-Host "Stage: Print Docker information"
 docker version
 
+Write-Host "Stage: Print available .NET SDKs"
+dotnet --list-sdks
+
+Write-Host "Stage: Attempt to install .NET 9 SDK"
+apt-get update && apt-get install -y dotnet-sdk-9.0
+
 Write-Host "Stage: Configuring application version info"
 Replace-AppVersion -GitRepoRoot $GitRepoRoot -VersionStr $Version -GitBranch $GitBranch
 

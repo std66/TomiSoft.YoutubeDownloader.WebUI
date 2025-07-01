@@ -1,0 +1,80 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+permissions:
+  contents: write
+
+env:
+  IMAGE_NAME: std66/tomisoft-youtubedownloader-webui
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set version and branch
+        id: vars
+        run: |
+          echo "BUILD_VERSION=1.0.${{ github.run_number }}" >> $GITHUB_ENV
+          echo "GIT_BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
+
+      - name: Update AppVersion.cs
+        run: |
+          FILE="TomiSoft.YouTubeDownloader.WebUI/AppVersion.cs"
+          TEMPLATE_FILE="ContinousIntegration/Build/Templates/AppVersion.cs"
+
+          COMMIT_HASH=$(git rev-parse HEAD)
+          SHORT_HASH=$(git rev-parse --short HEAD)
+          BUILD_TIME=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          VERSION="${BUILD_VERSION}"
+          BRANCH="${GIT_BRANCH}"
+
+          CONTENT=$(cat "$TEMPLATE_FILE")
+          CONTENT="${CONTENT//GIT_COMMIT_HASH/$COMMIT_HASH}"
+          CONTENT="${CONTENT//GIT_SHORT_COMMIT_HASH/$SHORT_HASH}"
+          CONTENT="${CONTENT//GIT_BRANCH/$BRANCH}"
+          CONTENT="${CONTENT//BUILD_TIME/$BUILD_TIME}"
+          CONTENT="${CONTENT//VERSION/$VERSION}"
+
+          echo "$CONTENT" > "$FILE"
+
+      - name: Build .NET project
+        run: dotnet build
+
+      - name: Run tests
+        run: dotnet test --no-build --no-restore --logger trx
+
+      - name: Build Docker image
+        run: |
+          docker build -t local_image .
+          docker tag local_image $IMAGE_NAME
+          docker tag local_image $IMAGE_NAME:${BUILD_VERSION}
+
+      - name: Push Docker image
+        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+        env:
+          DOCKERHUB_USERNAME: std66
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
+        run: |
+          echo "${DOCKERHUB_TOKEN}" | docker login -u "${DOCKERHUB_USERNAME}" --password-stdin
+          docker push $IMAGE_NAME
+          docker push $IMAGE_NAME:${BUILD_VERSION}
+          docker logout
+
+      - name: Tag commit
+        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git tag build_${BUILD_VERSION}
+          git push origin build_${BUILD_VERSION}

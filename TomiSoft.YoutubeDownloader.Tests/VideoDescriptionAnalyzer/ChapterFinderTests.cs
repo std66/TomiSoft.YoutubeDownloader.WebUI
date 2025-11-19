@@ -5,7 +5,7 @@ using TomiSoft.YoutubeDownloader.VideoDescriptionAnalyzer;
 namespace TomiSoft.YoutubeDownloader.Tests.VideoDescriptionAnalyzer {
 	[TestClass]
 	public class ChapterFinderTests {
-		private readonly ChapterFinder finder = new ChapterFinder();
+		private readonly ChapterFinder finder = new();
 
 		[TestMethod]
 		[Description("Tests that the chapter finder returns false when the media info parameter is null.")]

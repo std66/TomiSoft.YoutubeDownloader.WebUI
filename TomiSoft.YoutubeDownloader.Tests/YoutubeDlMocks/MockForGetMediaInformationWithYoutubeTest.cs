@@ -15,7 +15,7 @@ namespace TomiSoft.YoutubeDownloader.Tests.YoutubeDlMocks {
 		}
 
 		public MockForGetMediaInformationWithYoutubeTest(string VideoTitle, string VideoID, string UploaderID, string Description, int Likes, int Dislikes, int Views, double Duration, string VideoUri, string IdentifiedArtist, string IdentifiedSong, string UploadDate) {
-			Dictionary<string, string> markers = new Dictionary<string, string>() {
+			Dictionary<string, string> markers = new() {
 				["TITLE"] = VideoTitle,
 				["VIDEOID"] = VideoID,
 				["UPLOADER"] = UploaderID,

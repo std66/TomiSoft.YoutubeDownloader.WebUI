@@ -5,7 +5,7 @@ using TomiSoft.YoutubeDownloader.Media;
 
 namespace TomiSoft.YoutubeDownloader.VideoDescriptionAnalyzer {
 	public class ChapterFinder : IChapterFinder {
-		private static readonly Regex regex = new Regex(
+		private static readonly Regex regex = new(
 			"^" +
 			@"\W*(?<start>(\d{1,2}:)?\d{1,2}:\d{1,2})\W+" +
 			@"(?<end>(\d{1,2}:)?\d{1,2}:\d{1,2})?(\W+)?" +
@@ -29,7 +29,7 @@ namespace TomiSoft.YoutubeDownloader.VideoDescriptionAnalyzer {
 		}
 
 		private IReadOnlyList<Chapter> ExtractChapters(IMediaInformation mediaInfo, MatchCollection matches) {
-			List<Chapter> result = new List<Chapter>();
+			List<Chapter> result = new();
 
 			for (int i = 0; i < matches.Count; i++) {
 				string startTimeStr = TimestampStringCorrector.Correct(matches[i].Groups["start"].Value);

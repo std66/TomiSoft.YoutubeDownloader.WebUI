@@ -32,21 +32,21 @@ www.tomorrowland.com
 		public double Duration => new TimeSpan(01, 30, 14).TotalSeconds;
 		public bool ShouldSucceed => true;
 		public IReadOnlyList<Chapter> ExpectedOutput => new List<Chapter>() {
-			new Chapter(new TimeSpan(00, 00, 00), new TimeSpan(00, 01, 45), "Intro"),
-			new Chapter(new TimeSpan(00, 01, 45), new TimeSpan(00, 07, 50), "Take It Smart (Original Mix)"),
-			new Chapter(new TimeSpan(00, 07, 50), new TimeSpan(00, 13, 35), "Thunderstorm (Original Mix)"),
-			new Chapter(new TimeSpan(00, 13, 35), new TimeSpan(00, 18, 22), "Space Diver (Original Mix)"),
-			new Chapter(new TimeSpan(00, 18, 22), new TimeSpan(00, 26, 40), "Gravity (Original Mix)"),
-			new Chapter(new TimeSpan(00, 26, 40), new TimeSpan(00, 32, 15), "The Troublemakerz (Original Mix)"),
-			new Chapter(new TimeSpan(00, 32, 15), new TimeSpan(00, 39, 26), "Nothing Seems To Be (Original Mix)"),
-			new Chapter(new TimeSpan(00, 39, 26), new TimeSpan(00, 45, 38), "Never Look Back (Original Mix)"),
-			new Chapter(new TimeSpan(00, 45, 38), new TimeSpan(00, 51, 45), "To The Moon And Back (Original Mix)"),
-			new Chapter(new TimeSpan(00, 51, 45), new TimeSpan(00, 58, 14), "Blue Lake (Original Mix)"),
-			new Chapter(new TimeSpan(00, 58, 14), new TimeSpan(01, 04, 25), "I Am The Joker (Original Mix)"),
-			new Chapter(new TimeSpan(01, 04, 25), new TimeSpan(01, 10, 09), "Game Over (Original Mix)"),
-			new Chapter(new TimeSpan(01, 10, 09), new TimeSpan(01, 17, 13), "Purple Noise (Original Mix)"),
-			new Chapter(new TimeSpan(01, 17, 13), new TimeSpan(01, 23, 28), "Hashtag (Original Mix)"),
-			new Chapter(new TimeSpan(01, 23, 28), new TimeSpan(01, 30, 14), "end / Angel In The Sky (Original Mix)")
+			new(new TimeSpan(00, 00, 00), new TimeSpan(00, 01, 45), "Intro"),
+			new(new TimeSpan(00, 01, 45), new TimeSpan(00, 07, 50), "Take It Smart (Original Mix)"),
+			new(new TimeSpan(00, 07, 50), new TimeSpan(00, 13, 35), "Thunderstorm (Original Mix)"),
+			new(new TimeSpan(00, 13, 35), new TimeSpan(00, 18, 22), "Space Diver (Original Mix)"),
+			new(new TimeSpan(00, 18, 22), new TimeSpan(00, 26, 40), "Gravity (Original Mix)"),
+			new(new TimeSpan(00, 26, 40), new TimeSpan(00, 32, 15), "The Troublemakerz (Original Mix)"),
+			new(new TimeSpan(00, 32, 15), new TimeSpan(00, 39, 26), "Nothing Seems To Be (Original Mix)"),
+			new(new TimeSpan(00, 39, 26), new TimeSpan(00, 45, 38), "Never Look Back (Original Mix)"),
+			new(new TimeSpan(00, 45, 38), new TimeSpan(00, 51, 45), "To The Moon And Back (Original Mix)"),
+			new(new TimeSpan(00, 51, 45), new TimeSpan(00, 58, 14), "Blue Lake (Original Mix)"),
+			new(new TimeSpan(00, 58, 14), new TimeSpan(01, 04, 25), "I Am The Joker (Original Mix)"),
+			new(new TimeSpan(01, 04, 25), new TimeSpan(01, 10, 09), "Game Over (Original Mix)"),
+			new(new TimeSpan(01, 10, 09), new TimeSpan(01, 17, 13), "Purple Noise (Original Mix)"),
+			new(new TimeSpan(01, 17, 13), new TimeSpan(01, 23, 28), "Hashtag (Original Mix)"),
+			new(new TimeSpan(01, 23, 28), new TimeSpan(01, 30, 14), "end / Angel In The Sky (Original Mix)")
 		};
 	}
 }

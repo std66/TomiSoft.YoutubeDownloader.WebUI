@@ -4,8 +4,8 @@ using System.Diagnostics;
 
 namespace TomiSoft.Common.SystemProcess {
 	public class CapturingProcess : ProcessFacade, IProcess {
-		private readonly List<string> output = new List<string>();
-		private readonly List<string> error = new List<string>();
+		private readonly List<string> output = new();
+		private readonly List<string> error = new();
 
 		public override IReadOnlyList<string> StandardOutputLines => this.output;
 		public override IReadOnlyList<string> StandardErrorLines => this.error;

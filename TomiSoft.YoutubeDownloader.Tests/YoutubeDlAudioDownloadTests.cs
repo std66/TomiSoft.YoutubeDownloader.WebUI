@@ -38,10 +38,10 @@ namespace TomiSoft.YoutubeDownloader.Tests {
 
 			MockForAudioDownloadTest processMock = this.CreateProcessFactory(sample, DownloadDirectory);
 
-			YoutubeDl downloader = new YoutubeDl(processMock);
+			YoutubeDl downloader = new(processMock);
 
-			Dictionary<double, bool> ExpectedPercentsToBeReported = new Dictionary<double, bool>(sample.ExpectedPercents.Distinct().Select(x => new KeyValuePair<double, bool>(x, false)));
-			Dictionary<DownloadState, bool> ExpectedStatusesToBeReported = new Dictionary<DownloadState, bool>(sample.ExpectedDownloadStatuses.Distinct().Select(x => new KeyValuePair<DownloadState, bool>(x, false)));
+			Dictionary<double, bool> ExpectedPercentsToBeReported = new(sample.ExpectedPercents.Distinct().Select(x => new KeyValuePair<double, bool>(x, false)));
+			Dictionary<DownloadState, bool> ExpectedStatusesToBeReported = new(sample.ExpectedDownloadStatuses.Distinct().Select(x => new KeyValuePair<DownloadState, bool>(x, false)));
 
 			using (IDownload progress = downloader.PrepareDownload(new Uri(sample.MediaUri), MediaFormat.MP3Audio, DownloadDirectory)) {
 				RunDownload(processMock, ExpectedPercentsToBeReported, ExpectedStatusesToBeReported, progress);

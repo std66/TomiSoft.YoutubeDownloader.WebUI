@@ -7,9 +7,9 @@ namespace TomiSoft.Common.SystemProcess {
 	public class ProcessOutputDecorator : IProcess {
 
 		private readonly IProcess decoratedProcess;
-		private readonly Dictionary<string, Action<IReadOnlyDictionary<string, string>>> stdoutLineProcessors = new Dictionary<string, Action<IReadOnlyDictionary<string, string>>>();
-		private readonly Dictionary<string, Action<IReadOnlyDictionary<string, string>>> stderrLineProcessors = new Dictionary<string, Action<IReadOnlyDictionary<string, string>>>();
-		private readonly Dictionary<string, Regex> regexes = new Dictionary<string, Regex>();
+		private readonly Dictionary<string, Action<IReadOnlyDictionary<string, string>>> stdoutLineProcessors = new();
+		private readonly Dictionary<string, Action<IReadOnlyDictionary<string, string>>> stderrLineProcessors = new();
+		private readonly Dictionary<string, Regex> regexes = new();
 
 		public int ExitCode => decoratedProcess.ExitCode;
 		public bool ExitedSuccessfully => decoratedProcess.ExitedSuccessfully;
@@ -57,7 +57,7 @@ namespace TomiSoft.Common.SystemProcess {
 
 				Match match = regex.Match(line);
 				if (match.Success) {
-					Dictionary<string, string> args = new Dictionary<string, string>();
+					Dictionary<string, string> args = new();
 					foreach (string capturingGroupName in regex.GetGroupNames()) {
 						args.Add(capturingGroupName, match.Groups[capturingGroupName].Value);
 					}

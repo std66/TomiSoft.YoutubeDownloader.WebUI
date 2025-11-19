@@ -16,7 +16,7 @@ namespace TomiSoft.YouTubeDownloader.BusinessLogic.DataManagement {
 		private const int CleanUpNotAssignedRecordsAfterMinutes = 1;
 		private const int CleanUpAssignedRecordsAfterMinutes = 60;
 
-		private readonly List<FilenameRecord> records = new List<FilenameRecord>();
+		private readonly List<FilenameRecord> records = new();
 		private readonly Timer cleanupTimer;
 
 		public MemoryFilenameDB() {
@@ -35,7 +35,7 @@ namespace TomiSoft.YouTubeDownloader.BusinessLogic.DataManagement {
 		}
 
 		public bool AddFilename(Uri MediaUri, string Filename) {
-			FilenameRecord newRecord = new FilenameRecord() {
+			FilenameRecord newRecord = new() {
 				CreateTime = DateTime.UtcNow,
 				MediaUri = MediaUri,
 				Filename = Filename,

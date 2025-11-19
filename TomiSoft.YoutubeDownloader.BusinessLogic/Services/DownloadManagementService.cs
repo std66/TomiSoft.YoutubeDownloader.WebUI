@@ -10,8 +10,8 @@ using TomiSoft.YouTubeDownloader.BusinessLogic.BusinessModels;
 
 namespace TomiSoft.YoutubeDownloader.BusinessLogic.Services {
 	public class DownloadManagementService : IDownloadManagementService {
-		private readonly List<QueuedDownloadBM> runningDownloads = new List<QueuedDownloadBM>();
-		private readonly List<CompletedQueuedDownloadBM> completedDownloads = new List<CompletedQueuedDownloadBM>();
+		private readonly List<QueuedDownloadBM> runningDownloads = new();
+		private readonly List<CompletedQueuedDownloadBM> completedDownloads = new();
 
 		private readonly ILogger<DownloadManagementService> logger;
 		private readonly IDownloadStatusNotifier notifier;
@@ -30,7 +30,7 @@ namespace TomiSoft.YoutubeDownloader.BusinessLogic.Services {
 		public int ActiveDownloadCount => runningDownloads.Count;
 
 		private void EventHandler_DownloadCompleted(QueuedDownloadBM download) {
-			CompletedQueuedDownloadBM completedDownload = new CompletedQueuedDownloadBM(download.DownloadID, download.DownloadHandler, DateTime.UtcNow);
+			CompletedQueuedDownloadBM completedDownload = new(download.DownloadID, download.DownloadHandler, DateTime.UtcNow);
 
 			runningDownloads.Remove(download);
 			completedDownloads.Add(completedDownload);
@@ -39,7 +39,7 @@ namespace TomiSoft.YoutubeDownloader.BusinessLogic.Services {
 		}
 
 		public void StartDownload(DownloadRequestBM request) {
-			QueuedDownloadBM download = new QueuedDownloadBM(
+			QueuedDownloadBM download = new(
 				downloadId: request.DownloadId,
 				downloadProgress: this.youtubeDl.PrepareDownload(request.MediaUri, request.Format, serviceConfig.DownloadPath)
 			);

@@ -13,7 +13,7 @@ namespace TomiSoft.YoutubeDownloader.BusinessLogic.Services {
 			public DateTimeOffset CompletionTime { get; set; }
 		}
 
-		private readonly List<DownloadToDelete> completedDownloads = new List<DownloadToDelete>();
+		private readonly List<DownloadToDelete> completedDownloads = new();
 		private readonly ILogger<DownloadedFileCleanupService> logger;
 		private readonly IFileManager fileManager;
 		private readonly IDataRetentionConfiguration serviceConfiguration;
@@ -36,7 +36,7 @@ namespace TomiSoft.YoutubeDownloader.BusinessLogic.Services {
 		}
 
 		public void RunCleanup() {
-			List<DownloadToDelete> ToRemove = new List<DownloadToDelete>();
+			List<DownloadToDelete> ToRemove = new();
 
 			foreach (DownloadToDelete download in this.completedDownloads.Where(IsDeletable)) {
 				string filename = download.Download.Filename;

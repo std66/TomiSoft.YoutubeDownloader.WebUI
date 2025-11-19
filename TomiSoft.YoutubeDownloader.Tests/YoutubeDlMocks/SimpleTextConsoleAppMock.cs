@@ -31,7 +31,7 @@ namespace TomiSoft.YoutubeDownloader.Tests.YoutubeDlMocks {
 	}
 
 	class To {
-		public static KeyValuePair<SimpleTextConsoleAppMock.WriteTo, string> Out(string data) => new KeyValuePair<SimpleTextConsoleAppMock.WriteTo, string>(SimpleTextConsoleAppMock.WriteTo.StdOut, data);
-		public static KeyValuePair<SimpleTextConsoleAppMock.WriteTo, string> Err(string data) => new KeyValuePair<SimpleTextConsoleAppMock.WriteTo, string>(SimpleTextConsoleAppMock.WriteTo.StdErr, data);
+		public static KeyValuePair<SimpleTextConsoleAppMock.WriteTo, string> Out(string data) => new(SimpleTextConsoleAppMock.WriteTo.StdOut, data);
+		public static KeyValuePair<SimpleTextConsoleAppMock.WriteTo, string> Err(string data) => new(SimpleTextConsoleAppMock.WriteTo.StdErr, data);
 	}
 }

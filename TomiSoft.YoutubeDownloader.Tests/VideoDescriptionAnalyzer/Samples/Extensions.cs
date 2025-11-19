@@ -8,7 +8,7 @@ using TomiSoft.YoutubeDownloader.VideoDescriptionAnalyzer;
 namespace TomiSoft.YoutubeDownloader.Tests.VideoDescriptionAnalyzer.Samples {
 	internal static class Extensions {
 		public static IMediaInformation CreateMediaInfoMock(this IChapterExtractTestSample sample) {
-			Mock<IMediaInformation> mock = new Mock<IMediaInformation>();
+			Mock<IMediaInformation> mock = new();
 
 			mock
 				.SetupGet(x => x.Description)
@@ -37,7 +37,7 @@ namespace TomiSoft.YoutubeDownloader.Tests.VideoDescriptionAnalyzer.Samples {
 			else {
 				Assert.IsFalse(actualResult, $"{nameof(ChapterFinder)}.{nameof(ChapterFinder.TryFindChapters)} has returned True, meaning that the extractor has found chapters in the description text, but it shoudn't have.");
 				Assert.IsNotNull(actualChapters, $"{nameof(ChapterFinder)}.{nameof(ChapterFinder.TryFindChapters)} has returned a NULL-collection.");
-				Assert.IsTrue(actualChapters.Count == 0, $"{nameof(ChapterFinder)}.{nameof(ChapterFinder.TryFindChapters)} did not return an empty collection of chapters.");
+				Assert.IsEmpty(actualChapters, $"{nameof(ChapterFinder)}.{nameof(ChapterFinder.TryFindChapters)} did not return an empty collection of chapters.");
 			}
 		}
 	}

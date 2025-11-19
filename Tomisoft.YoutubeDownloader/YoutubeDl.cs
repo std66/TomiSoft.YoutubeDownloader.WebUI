@@ -48,28 +48,18 @@ namespace TomiSoft.YoutubeDownloader {
 			string targetDirectory = downloadDirectory;
 			string TargetFilename = Path.Combine(targetDirectory, $"{filenameGuid}.%(ext)s");
 
-			IProcess process;
-			switch (MediaFormat) {
-				case MediaFormat.MP3Audio:
-					process = this.ProcessFactory.Create("--newline", "--extract-audio", "--audio-format", "mp3", "-o", TargetFilename, MediaUri.ToString());
-					break;
-
-				case MediaFormat.Video:
-					process = this.ProcessFactory.Create("--newline", "-o", TargetFilename, MediaUri.ToString());
-					break;
-
-				default:
-					throw new NotSupportedException($"The requested media format ({MediaFormat}) is not supported.");
-			}
-
+			IProcess process = MediaFormat switch {
+				MediaFormat.MP3Audio => this.ProcessFactory.Create("--newline", "--extract-audio", "--audio-format", "mp3", "-o", TargetFilename, MediaUri.ToString()),
+				MediaFormat.Video => this.ProcessFactory.Create("--newline", "-o", TargetFilename, MediaUri.ToString()),
+				_ => throw new NotSupportedException($"The requested media format ({MediaFormat}) is not supported."),
+			};
 			return new DownloadProgress(process, filenameGuid, targetDirectory);
 		}
 
 		public void Update() {
-			using (IProcess p = this.ProcessFactory.Create("-U")) {
-				p.Start();
-				p.WaitForExit();
-			}
+			using IProcess p = this.ProcessFactory.Create("-U");
+			p.Start();
+			p.WaitForExit();
 		}
 	}
 }

@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 
 namespace TomiSoft.Common.Hosting {
 	public class QueueService<T> : IQueueService<T> {
-		private readonly ConcurrentQueue<T> queue = new ConcurrentQueue<T>();
-		private readonly SemaphoreSlim semaphore = new SemaphoreSlim(0);
+		private readonly ConcurrentQueue<T> queue = new();
+		private readonly SemaphoreSlim semaphore = new(0);
 
 		public void Enqueue(T item) {
 			this.queue.Enqueue(item);

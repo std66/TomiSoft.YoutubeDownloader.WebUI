@@ -28,9 +28,9 @@ namespace TomiSoft.YouTubeDownloader.WebUI.Hubs {
 				targetFormat = YoutubeDownloader.Media.MediaFormat.MP3Audio;
 			}
 
-			Uri uri = new Uri(mediaUri);
+			Uri uri = new(mediaUri);
 
-			DownloadRequestBM request = new DownloadRequestBM(uri, targetFormat);
+			DownloadRequestBM request = new(uri, targetFormat);
 
 			downloadServiceQueue.Enqueue(request);
 			this.filenameDatabase.AssignDownloadId(uri, request.DownloadId);

@@ -12,9 +12,9 @@ namespace TomiSoft.YoutubeDownloader.Tests {
 		public async Task CanGetVersionAsync() {
 			string expectedVersion = "2018.12.11.";
 
-			MockForGetVersionTest mock = new MockForGetVersionTest(expectedVersion);
+			MockForGetVersionTest mock = new(expectedVersion);
 
-			YoutubeDl downloader = new YoutubeDl(mock);
+			YoutubeDl downloader = new(mock);
 			string actual = await downloader.GetVersionAsync();
 
 			Assert.IsTrue(mock.ParametersPassedCorrectly);
@@ -23,11 +23,13 @@ namespace TomiSoft.YoutubeDownloader.Tests {
 		}
 
 		[TestMethod]
-		[ExpectedException(typeof(MediaInformationExtractException), AllowDerivedTypes = true)]
 		public async Task CanHandleGetMediaInformationExceptionalCasesAsync() {
-			MockForGetMediaInformationFaultyTest mock = new MockForGetMediaInformationFaultyTest();
-			YoutubeDl dl = new YoutubeDl(mock);
-			await dl.GetMediaInformationAsync(new Uri("http://something.com"));
+			MockForGetMediaInformationFaultyTest mock = new();
+			YoutubeDl dl = new(mock);
+
+			await Assert.ThrowsAsync<MediaInformationExtractException>(async () => {
+				await dl.GetMediaInformationAsync(new Uri("http://something.com"));
+			});
 		}
 
 		[TestMethod]
@@ -45,7 +47,7 @@ namespace TomiSoft.YoutubeDownloader.Tests {
 			string ExpectedIdentifiedSong = "sample-song";
 			string ExpectedUploadDate = "20181216";
 
-			MockForGetMediaInformationWithYoutubeTest processMock = new MockForGetMediaInformationWithYoutubeTest(
+			MockForGetMediaInformationWithYoutubeTest processMock = new(
 				ExpectedVideoTitle,
 				ExpectedVideoID,
 				ExpectedUploaderID,
@@ -60,15 +62,15 @@ namespace TomiSoft.YoutubeDownloader.Tests {
 				ExpectedUploadDate
 			);
 
-			YoutubeDl downloader = new YoutubeDl(processMock);
+			YoutubeDl downloader = new(processMock);
 			IMediaInformation actual = await downloader.GetMediaInformationAsync(new Uri(ExpectedVideoUri));
 
 			Assert.IsTrue(processMock.ProcessStarted, "Youtube-dl was not started.");
 			Assert.IsTrue(processMock.ParametersPassedCorrectly, "Command-line arguments were passed incorrectly to youtube-dl.");
 
 			Assert.IsNotNull(actual);
-			Assert.IsInstanceOfType(actual, typeof(ILikeableMedia));
-			Assert.IsInstanceOfType(actual, typeof(IIdentifiedSong));
+			Assert.IsInstanceOfType<ILikeableMedia>(actual);
+			Assert.IsInstanceOfType<IIdentifiedSong>(actual);
 
 			Assert.AreEqual(ExpectedVideoUri, actual.MediaUri);
 			Assert.AreEqual(ExpectedDuration, actual.Duration);

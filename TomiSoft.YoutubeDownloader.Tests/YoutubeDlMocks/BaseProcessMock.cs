@@ -12,8 +12,8 @@ namespace TomiSoft.YoutubeDownloader.Tests.YoutubeDlMocks {
 		}
 
 		private IEnumerable<string> args;
-		private readonly List<string> stdOut = new List<string>();
-		private readonly List<string> stdErr = new List<string>();
+		private readonly List<string> stdOut = new();
+		private readonly List<string> stdErr = new();
 		private readonly Behavior behavior;
 
 		public event DataReceivedEventHandler OutputDataReceived;
@@ -94,7 +94,7 @@ namespace TomiSoft.YoutubeDownloader.Tests.YoutubeDlMocks {
 
 		protected void Write(string data) {
 			this.stdOut.Add(data);
-			this.OutputDataReceived?.Invoke(this, this.CreateMockDataReceivedEventArgs(data));
+			this.OutputDataReceived?.Invoke(this, CreateMockDataReceivedEventArgs(data));
 		}
 
 		protected void WriteLine(string data) {
@@ -103,37 +103,26 @@ namespace TomiSoft.YoutubeDownloader.Tests.YoutubeDlMocks {
 
 		protected void ErrorWrite(string data) {
 			this.stdErr.Add(data);
-			this.ErrorDataReceived?.Invoke(this, this.CreateMockDataReceivedEventArgs(data));
+			this.ErrorDataReceived?.Invoke(this, CreateMockDataReceivedEventArgs(data));
 		}
 
 		protected void ErrorWriteLine(string data) {
 			ErrorWrite($"{data}{Environment.NewLine}");
 		}
 
-		private DataReceivedEventArgs CreateMockDataReceivedEventArgs(string TestData) {
-			if (TestData == null)
-				throw new ArgumentNullException(nameof(TestData));
+		private static DataReceivedEventArgs CreateMockDataReceivedEventArgs(string TestData) {
+			ArgumentNullException.ThrowIfNull(TestData);
 
-			DataReceivedEventArgs MockEventArgs =
-				(DataReceivedEventArgs)System.Runtime.Serialization.FormatterServices
-				 .GetUninitializedObject(typeof(DataReceivedEventArgs));
+			var ctor = typeof(DataReceivedEventArgs)
+				.GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance)
+				.FirstOrDefault(c => c.GetParameters().Length == 1 && c.GetParameters()[0].ParameterType == typeof(string));
 
-			FieldInfo[] EventFields = typeof(DataReceivedEventArgs)
-				.GetFields(
-					BindingFlags.NonPublic |
-					BindingFlags.Instance |
-					BindingFlags.DeclaredOnly);
-
-			if (EventFields.Count() > 0) {
-				EventFields[0].SetValue(MockEventArgs, TestData);
+			if (ctor != null) {
+				return (DataReceivedEventArgs)ctor.Invoke(new object[] { TestData });
 			}
 			else {
-				throw new ApplicationException(
-					"Failed to find _data field!");
+				throw new ApplicationException("Failed to find suitable constructor for DataReceivedEventArgs!");
 			}
-
-			return MockEventArgs;
-
 		}
 
 		public IAsyncProcess CreateAsyncProcess() {

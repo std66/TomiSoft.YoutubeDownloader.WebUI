@@ -46,7 +46,7 @@ namespace TomiSoft.Common.Configuration.ConfigMapFileProvider {
 		private Timer timer;
 		private bool hasChanged;
 		private string lastChecksum;
-		object timerLock = new object();
+		object timerLock = new();
 
 		public ConfigMapFileProviderChangeToken(string rootPath, string filter, int detectChangeIntervalMs = 30_000) {
 			Console.WriteLine($"new {nameof(ConfigMapFileProviderChangeToken)} for {filter}");

@@ -1,23 +1,26 @@
-﻿using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using NLog.Web;
 using System;
 using System.IO;
 using TomiSoft.Common.Configuration.ConfigMapFileProvider;
+using NLog;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Hosting;
 
 namespace TomiSoft.YouTubeDownloader.WebUI {
 	public class Program {
 		public static void Main(string[] args) {
 			// NLog: setup the logger first to catch all errors
 			string nlogConfig = File.Exists(Path.Combine("config", "nlog.config")) ? Path.Combine("config", "nlog.config") : "nlog.config";
-			var logger = NLogBuilder.ConfigureNLog(nlogConfig).GetCurrentClassLogger();
+			LogManager.Setup().LoadConfigurationFromFile(nlogConfig);
+			var logger = LogManager.GetCurrentClassLogger();
 			logger.Info("NLog is configured using '{ConfigFile}'", nlogConfig);
 
 			try {
 				logger.Info("Initializing WebHost...");
-				CreateWebHostBuilder(args, nlogConfig).Build().Run();
+				CreateHostBuilder(args).Build().Run();
 			}
 			catch (Exception ex) {
 				//NLog: catch setup errors
@@ -31,8 +34,11 @@ namespace TomiSoft.YouTubeDownloader.WebUI {
 			}
 		}
 
-		public static IWebHostBuilder CreateWebHostBuilder(string[] args, string nlogConfig) =>
-			WebHost.CreateDefaultBuilder(args)
+		public static IHostBuilder CreateHostBuilder(string[] args) =>
+			Host.CreateDefaultBuilder(args)
+				.ConfigureHostOptions(options => {
+					options.BackgroundServiceExceptionBehavior = BackgroundServiceExceptionBehavior.Ignore;
+				})
 				.ConfigureAppConfiguration(
 					builder => {
 						builder
@@ -52,7 +58,9 @@ namespace TomiSoft.YouTubeDownloader.WebUI {
 				.ConfigureLogging(logging => {
 					logging.ClearProviders();
 				})
-				.UseStartup<Startup>()
-				.UseNLog();
+				.ConfigureWebHostDefaults(webBuilder => {
+					webBuilder.UseStartup<Startup>();
+					webBuilder.UseNLog();
+				});
 	}
 }

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace TomiSoft.Common.SystemProcess.CliWrap {
 	public class CliWrapProcess : IAsyncProcess {
-		private static char[] Newline = Environment.NewLine.ToCharArray();
+		private static readonly char[] Newline = Environment.NewLine.ToCharArray();
 		private readonly string executablePath;
 
 		public CliWrapProcess(string executablePath) {
